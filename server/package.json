@@ -9,9 +9,6 @@
     "clean": "ts-clean",
     "lint": "tslint --fix -p tsconfig.json -c tslint.json"
   },
-  "_moduleAliases": {
-    "@": ".src"
-  },
   "dependencies": {
     "@koa/cors": "^2.2.3",
     "@types/ws": "^6.0.3",
