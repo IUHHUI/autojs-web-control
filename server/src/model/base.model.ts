@@ -35,6 +35,6 @@ export default class BaseService<T> {
 
   async updateById(id: string|number, data: T) {
     return await db.table(this.$tableName).where({ [this.$primaryKey]: id }).update(data);
-  }  
+  }
 
 }

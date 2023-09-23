@@ -11,6 +11,9 @@ export class DeviceModel extends BaseModel<ITableStructure> {
     super({ tableName });
   }
 
+  getAll() {
+    return this.$db.table(this.$tableName).field('script_id', 'script_name', 'script_args', 'create_time', 'update_time').select();
+  }
 }
 
 export default new DeviceModel();
