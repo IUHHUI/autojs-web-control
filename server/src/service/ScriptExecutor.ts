@@ -50,7 +50,7 @@ export default class ScriptExecutor {
     };
 
     WebSocketManager.getInstance().getClients().forEach((client) => {
-      if (client.type === 'device' && (!devices || devices.includes(client.extData.device_id))) {
+      if (client.type === 'device' && (!devices || !devices.length || devices.includes(client.extData.device_id))) {
         WebSocketManager.getInstance().sendMessage(client, data);
       }
     });

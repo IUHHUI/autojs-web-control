@@ -31,8 +31,9 @@ const config = {
     },
   },
   categories: {
-    default: { appenders: ['stdout', 'app', 'errors'], level: 'DEBUG' },
-    http: { appenders: ['stdout', 'access'], level: 'DEBUG' },
+    default: { appenders: ['stdout', 'app', 'errors'], level: 'INFO' },
+    http: { appenders: ['stdout', 'access'], level: 'INFO' },
+    app: { appenders: ['stdout', 'access'], level: 'INFO' },
   },
   pm2: true, // https://log4js-node.github.io/log4js-node/clustering.html
   pm2InstanceVar: 'INSTANCE_ID',

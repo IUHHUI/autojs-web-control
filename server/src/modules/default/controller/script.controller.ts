@@ -34,6 +34,18 @@ export class Script {
     return ResultUtils.success();
   }
 
+  @Post('/stop')
+  @Description('停止脚本')
+  @BodySchame({
+    devices: joi.string(),
+    fileName: joi.string(),
+    script: joi.string(),
+  })
+  async stop(@Body() body: any) {
+    ScriptExecutor.getInstance().run(body.devices, body.fileName, body.script);
+    return ResultUtils.success();
+  }
+
   @Post('/stop_all')
   @Description('执行脚本2')
   @BodySchame({

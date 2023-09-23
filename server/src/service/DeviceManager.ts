@@ -73,7 +73,7 @@ export class DeviceManager {
     // });
 
     WebSocketManager.getInstance().addClientMessageListener((client, message) => {
-      logger.info('WebSocket.Client onClientMessage -> ' + client.type + ' message -> ' + JSON.stringify(message || 'NULL'));
+      // logger.debug('WebSocket.Client onClientMessage -> ' + client.type + ' message -> ' + JSON.stringify(message || 'NULL'));
       if (client.type === 'device') {
         // const message = JSON.parse(data as string);
         if (message.type === 'hello') {

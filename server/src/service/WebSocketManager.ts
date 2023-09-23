@@ -27,7 +27,6 @@ export type IClientStatusChangeListener = (
 ) => void;
 export type IDeviceLogListener = (client: WebSocketExt, log: any) => void;
 
-const DEBUG = true;
 const clientRequestListeners: IClientRequestListener[] = [];
 const clientMessageListeners: IClientMessageListener[] = [];
 const clientStatusChangeListeners: IClientStatusChangeListener[] = [];
@@ -79,7 +78,6 @@ export class WebSocketManager extends EventEmitter {
     // });
 
     this.wss.on('request', (request) => {
-      console.log('on request')
       this.authenticate(request.httpRequest, (authenticateInfo) => {
         logger.debug('authenticateInfo', authenticateInfo);
         const connection = request.accept() as WebSocketExt;
