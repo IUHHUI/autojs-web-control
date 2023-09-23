@@ -25,6 +25,9 @@ export class DeviceModel extends BaseModel<ITableStructure> {
     return this.$db.table(tableName).where({ ip }).findOrEmpty();
   }
 
+  async getUnion(name: string, ip: string) {
+    return this.$db.table(tableName).where({ name, ip }).findOrEmpty();
+  }
 }
 
 export default new DeviceModel();

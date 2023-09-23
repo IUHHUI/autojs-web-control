@@ -18,10 +18,27 @@ export class DeviceManager {
     return DeviceManager.instance;
   }
 
-  private static clientHelloListener(client: WebSocketExt, data) {
-    // logger.debug("on client hello: ", data);
+  private static async upsertDevice(params: {name?: string, ip?: string}) {
+    const { name, ip } = params;
+    const deviceName = name || ip;
+
+    // let device = await DeviceModel.getByDeviceName(deviceName as string);
+    let device = await DeviceModel.getUnion(deviceName, ip);
+    if (!device) {
+      await DeviceModel.insert({ name: deviceName, ip, create_time: moment().format('YYYY-MM-DD HH:mm:ss') });
+    }
+
+    // device = await DeviceModel.getByDeviceName(deviceName);
+    await DeviceModel.updateById(device.device_id, { connect_time: moment().format('YYYY-MM-DD HH:mm:ss') });
+
+    return device
+  }
+
+  private static async clientHelloListener(client: WebSocketExt, data) {
+    logger.debug("on client hello: ", data);
     client.name = data['device_name'];
     let appVersionCode = data['app_version_code']
+    client.extData = await this.upsertDevice({ name: client.name, ip: client.ip });
 
     let returnData
     if (appVersionCode >= 629) {
@@ -46,24 +63,25 @@ export class DeviceManager {
     if (!DeviceManager.instance) {
       DeviceManager.instance = new DeviceManager();
     }
+
     WebSocketManager.getInstance().addClientRequestListeners(async (req) => {
       const params = querystring.parse(req.url.replace('/?', ''));
       if (params.token) {
         return { type: null };
       }
-      const ip = (req.connection.remoteAddress || (req.headers['x-forwarded-for'] as any || '').split(/\s*,\s*/)[0]).replace(/[^0-9\.]/ig, '');
+      // const ip = (req.connection.remoteAddress || (req.headers['x-forwarded-for'] as any || '').split(/\s*,\s*/)[0]).replace(/[^0-9\.]/ig, '');
 
-      const deviceName = params.name || ip;
+      // const deviceName = params.name || ip;
 
-      let device = await DeviceModel.getByDeviceName(deviceName as string);
-      if (!device) {
-        await DeviceModel.insert({ name:deviceName, ip, create_time: moment().format('YYYY-MM-DD HH:mm:ss') });
-      }
+      // let device = await DeviceModel.getByDeviceName(deviceName as string);
+      // if (!device) {
+      //   await DeviceModel.insert({ name:deviceName, ip, create_time: moment().format('YYYY-MM-DD HH:mm:ss') });
+      // }
 
-      device = await DeviceModel.getByDeviceName(deviceName);
-      await DeviceModel.updateById(device.device_id, { connect_time: moment().format('YYYY-MM-DD HH:mm:ss') });
+      // device = await DeviceModel.getByDeviceName(deviceName);
+      // await DeviceModel.updateById(device.device_id, { connect_time: moment().format('YYYY-MM-DD HH:mm:ss') });
 
-      return { type: 'device', extData: device };
+      return { type: 'device' };
     });
 
     // WebSocketManager.getInstance().addClientStatusChangeListener((client, status) => {
@@ -72,13 +90,13 @@ export class DeviceManager {
     //   }
     // });
 
-    WebSocketManager.getInstance().addClientMessageListener((client, message) => {
+    WebSocketManager.getInstance().addClientMessageListener(async (client, message) => {
       // logger.debug('WebSocket.Client onClientMessage -> ' + client.type + ' message -> ' + JSON.stringify(message || 'NULL'));
       if (client.type === 'device') {
         // const message = JSON.parse(data as string);
         if (message.type === 'hello') {
           // client.extData.device_name = message.data.device_name;
-          this.clientHelloListener(client, message.data);
+          await this.clientHelloListener(client, message.data);
         } else if (message.type === 'ping') {
           this.clientPingListener(client, message.data);
         }
@@ -89,7 +107,7 @@ export class DeviceManager {
   public getOnlineDevices() {
     const deviceClients = [];
     WebSocketManager.getInstance().getClients().forEach((c) => {
-      if (c.type === 'device') {
+      if (c.type === 'device' && c.extData) {
         deviceClients.push({
           ip: c.ip,
           device_name: c.extData.name,

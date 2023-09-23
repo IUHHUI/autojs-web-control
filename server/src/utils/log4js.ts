@@ -4,6 +4,7 @@
 
 import { configure, getLogger } from 'log4js';
 
+const LoggerLevel = 'DEBUG'
 const config = {
   replaceConsole: true,
   appenders: {
@@ -31,9 +32,9 @@ const config = {
     },
   },
   categories: {
-    default: { appenders: ['stdout', 'app', 'errors'], level: 'INFO' },
-    http: { appenders: ['stdout', 'access'], level: 'INFO' },
-    app: { appenders: ['stdout', 'access'], level: 'INFO' },
+    default: { appenders: ['stdout', 'app', 'errors'], level: LoggerLevel },
+    http: { appenders: ['stdout', 'access'], level: LoggerLevel },
+    app: { appenders: ['stdout', 'access'], level: LoggerLevel },
   },
   pm2: true, // https://log4js-node.github.io/log4js-node/clustering.html
   pm2InstanceVar: 'INSTANCE_ID',

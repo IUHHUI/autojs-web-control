@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import * as querystring from 'querystring';
 import * as http from 'http';
 import * as WebSocket from 'websocket';
 import getLogger from '@/utils/log4js';
@@ -79,12 +80,12 @@ export class WebSocketManager extends EventEmitter {
 
     this.wss.on('request', (request) => {
       this.authenticate(request.httpRequest, (authenticateInfo) => {
-        logger.debug('authenticateInfo', authenticateInfo);
         const connection = request.accept() as WebSocketExt;
         if (!connection) {
           return;
         }
 
+        logger.debug('authenticateInfo', authenticateInfo);
         if (authenticateInfo.type) {
           // this.wss.handleUpgrade(request.httpRequest, connection.socket);
 
@@ -186,9 +187,15 @@ export class WebSocketManager extends EventEmitter {
               listener(client, json);
             });
           } else {
-            clientMessageListeners.forEach((listener) => {
-              listener(client, json);
+            clientMessageListeners.forEach(async (listener) => {
+              await listener(client, json);
             });
+
+            if (json.type === 'hello') {
+              clientStatusChangeListeners.forEach((listener) => {
+                listener(client, 'open');
+              });
+            }
           }
         } catch (e) {
           console.error(e);
@@ -201,10 +208,8 @@ export class WebSocketManager extends EventEmitter {
       client.isAlive = true;
     });
 
+
     logger.info('WebSocket.Client open ip -> ' + client.ip);
-    clientStatusChangeListeners.forEach((listener) => {
-      listener(client, 'open');
-    });
   }
 
   public addDeviceLogListener(listener: IDeviceLogListener) {
