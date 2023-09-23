@@ -5,6 +5,7 @@ import DeviceModel from '@/model/device.model';
 import { WebSocketManager, WebSocketExt } from './WebSocketManager';
 import moment = require('moment');
 
+const DEBUG = false;
 const logger = getLogger('DeviceManager');
 
 export class DeviceManager {
@@ -15,6 +16,30 @@ export class DeviceManager {
       logger.info('DeviceManager Not initialized!');
     }
     return DeviceManager.instance;
+  }
+
+  private static clientHelloListener(client: WebSocketExt, data) {
+    // logger.debug("on client hello: ", data);
+    client.name = data['device_name'];
+    let appVersionCode = data['app_version_code']
+
+    let returnData
+    if (appVersionCode >= 629) {
+      returnData = { data: "ok", version: '1.109.0', debug: DEBUG, type: 'hello' }
+    } else {
+      returnData = { data: "连接成功", debug: DEBUG, type: 'hello' }
+    }
+    returnData = {"message_id":"1695436711356_0.39375184743990976","data":"ok","version":"1.109.0","debug":true,"type":"hello"}
+
+    logger.debug("return data: ", returnData)
+    WebSocketManager.getInstance().sendUtf(client, returnData);
+  }
+
+  private static clientPingListener(client: WebSocketExt, data) {
+    logger.debug("on client ping: ", data);
+    var returnData = { type: 'pong', data: data }
+    logger.debug("pong: ", returnData)
+    WebSocketManager.getInstance().sendUtf(client, returnData);
   }
 
   public static init() {
@@ -41,17 +66,21 @@ export class DeviceManager {
       return { type: 'device', extData: device };
     });
 
-    WebSocketManager.getInstance().addClientStatusChangeListener((client, status) => {
-      if (status === 'open' && client.type === 'device') {
-        WebSocketManager.getInstance().sendMessage(client, { type: 'hello', data: { server_version: 2 } });
-      }
-    });
+    // WebSocketManager.getInstance().addClientStatusChangeListener((client, status) => {
+    //   if (status === 'open' && client.type === 'device') {
+    //     WebSocketManager.getInstance().sendUtf(client, { type: 'hello', data: { server_version: 2 } });
+    //   }
+    // });
 
-    WebSocketManager.getInstance().addClientMessageListener((client, data) => {
+    WebSocketManager.getInstance().addClientMessageListener((client, message) => {
+      logger.info('WebSocket.Client onClientMessage -> ' + client.type + ' message -> ' + JSON.stringify(message || 'NULL'));
       if (client.type === 'device') {
-        const message = JSON.parse(data as string);
+        // const message = JSON.parse(data as string);
         if (message.type === 'hello') {
           // client.extData.device_name = message.data.device_name;
+          this.clientHelloListener(client, message.data);
+        } else if (message.type === 'ping') {
+          this.clientPingListener(client, message.data);
         }
       }
     });
@@ -73,7 +102,7 @@ export class DeviceManager {
   public disconnectDeviceByIp(ip: string) {
     WebSocketManager.getInstance().getClients().forEach((c) => {
       if (c.type === 'device' && c.ip === ip) {
-        c.terminate();
+        c.drop();
       }
     });
   }
@@ -81,7 +110,7 @@ export class DeviceManager {
   public disconnectDeviceByName(name: string) {
     WebSocketManager.getInstance().getClients().forEach((c) => {
       if (c.type === 'device' && c.extData.name === name) {
-        c.terminate();
+        c.drop();
       }
     });
   }
