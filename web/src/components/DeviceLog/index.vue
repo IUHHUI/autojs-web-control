@@ -48,6 +48,14 @@
           size="mini"
           @click="runScript"
         />
+        <el-button
+          v-if="showRun"
+          icon="el-icon-remove"
+          plain
+          circle
+          size="mini"
+          @click="stopScript"
+        />
         <slot />
         <el-button
           class="right mr10"
@@ -129,6 +137,11 @@ export default {
     },
     runScript() {
       this.$emit("run", {
+        devices: this.deviceSelect
+      });
+    },
+    stopScript() {
+      this.$emit("stop", {
         devices: this.deviceSelect
       });
     }

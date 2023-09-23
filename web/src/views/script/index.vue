@@ -7,12 +7,20 @@
           style="font-size: 15px;font-weight: 600; margin: 0 5px 0 3px;"
         />
         <span>{{ scriptData.script_name }}.js</span>
+        <el-button
+          v-loading="bustling"
+          icon="el-icon-circle-plus-outline"
+          plain
+          circle
+          size="mini"
+          @click="newAddPage"
+        />
       </div>
       <div class="actions" />
       <div class="mr20">
         <el-button
           v-loading="bustling"
-          icon="el-icon-suitcase"
+          icon="el-icon-upload2"
           plain
           circle
           size="mini"
@@ -29,7 +37,7 @@
         element-loading-text="Loading"
       />
       <div ref="divide" class="divide">Logcat</div>
-      <device-log class="device_log" :show-run="true" @run="runScript" />
+      <device-log class="device_log" :show-run="true" @run="runScript" @stop="stopScript" />
     </div>
   </div>
 </template>
@@ -87,6 +95,9 @@ export default {
     document.removeEventListener("keydown", this.saveListener);
   },
   methods: {
+    newAddPage() {
+      window.open("/#/develop");
+    },
     fetchData() {
       this.listLoading = true;
       request({
@@ -157,6 +168,23 @@ export default {
         })
         .then(res => {
           console.log(res);
+        })
+        .finally(() => {
+          this.bustling = false;
+        });
+    },
+    stopScript(devices) {
+      this.bustling = true;
+      console.log('stopScript', devices);
+      request
+        .post("/script/stop_all", {
+          devices: [devices.devices]
+        })
+        .then(res => {
+          this.$message({
+            message: "停止成功！",
+            type: "success"
+          });
         })
         .finally(() => {
           this.bustling = false;
