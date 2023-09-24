@@ -65,8 +65,11 @@ export class Script {
 
   @Get('/get_script_list')
   @Description('获取脚本列表')
-  async get_device_list() {
-    const scripts = await ScriptModel.getAll();
+  @QuerySchame({
+    noDetail: joi.boolean(),
+  })
+  async get_device_list(@Query() query: any) {
+    const scripts = await ScriptModel.getAll(query);
     return ResultUtils.success({ scripts });
   }
 
