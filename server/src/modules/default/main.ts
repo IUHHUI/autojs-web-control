@@ -27,6 +27,7 @@ import { WebSocketManager } from '@/service/WebSocketManager';
 import { DeviceManager } from '@/service/DeviceManager';
 import { AdminSocketManager } from '@/service/AdminSocketManager';
 import { SchedulerManager } from '@/service/SchedulerManager';
+import { VscodeProxy } from '@/service/proxy/VscodeProxy';
 import config from './config';
 import * as router from './router';
 
@@ -49,6 +50,7 @@ async function main() {
   DeviceManager.init();
   AdminSocketManager.init();
   await SchedulerManager.init();
+  VscodeProxy.init();
 }
 
 process.on('rejectionHandled', logger.error.bind(logger));

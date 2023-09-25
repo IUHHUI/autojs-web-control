@@ -2,6 +2,7 @@
   "conventionalCommits.scopes": [
     "device",
     "web",
-    "server-script"
+    "server-script",
+    "server-func"
   ]
 }

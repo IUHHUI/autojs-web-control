@@ -4,7 +4,8 @@
 
 import { configure, getLogger } from 'log4js';
 
-const LoggerLevel = 'DEBUG'
+// const LoggerLevel = 'DEBUG'
+const LoggerLevel = 'INFO'
 const config = {
   replaceConsole: true,
   appenders: {

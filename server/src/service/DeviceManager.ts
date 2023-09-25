@@ -22,8 +22,8 @@ export class DeviceManager {
     const { name, ip } = params;
     const deviceName = name || ip;
 
-    // let device = await DeviceModel.getByDeviceName(deviceName as string);
-    let device = await DeviceModel.getUnion(deviceName, ip);
+    let device = await DeviceModel.getByDeviceName(deviceName as string);
+    // let device = await DeviceModel.getUnion(deviceName, ip);
     if (!device) {
       await DeviceModel.insert({ name: deviceName, ip, create_time: moment().format('YYYY-MM-DD HH:mm:ss') });
     }
@@ -35,7 +35,7 @@ export class DeviceManager {
   }
 
   private static async clientHelloListener(client: WebSocketExt, data) {
-    logger.debug("on client hello: ", data);
+    // logger.debug("on client hello: ", data);
     client.name = data['device_name'];
     let appVersionCode = data['app_version_code']
     client.extData = await this.upsertDevice({ name: client.name, ip: client.ip });

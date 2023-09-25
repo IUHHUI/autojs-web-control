@@ -1,19 +1,22 @@
 import { EventEmitter } from 'events';
 import * as querystring from 'querystring';
 import * as http from 'http';
-import * as WebSocket from 'websocket';
+import * as websocket from 'websocket';
 import getLogger from '@/utils/log4js';
+import { ipFromWebSocket } from '@/utils/ip';
+import { parseMessage } from '@/utils/websocket/message';
 import { Buffer } from 'buffer';
 
 const logger = getLogger('WebSocketManager');
 
 export type WebSocketData = any;
-export interface WebSocketExt extends WebSocket.connection {
+export interface WebSocketExt extends websocket.connection {
   isAlive: boolean;
   ip: string;
   type: 'device' | 'admin';
   name: string;
   extData?: any;
+  vscodeConnection?: websocket.connection;
 }
 export type IClientRequestListener = (
   req: http.IncomingMessage,
@@ -43,8 +46,9 @@ export const bufferFromString = Buffer.from
 export class WebSocketManager extends EventEmitter {
   static instance: WebSocketManager;
 
-  private wss: WebSocket.server;
   private httpServer: http.Server;
+  private wss: websocket.server;
+  public wsClient: websocket.client;
   private pingTimeout: NodeJS.Timeout;
 
   public static init(server: http.Server) {
@@ -65,11 +69,14 @@ export class WebSocketManager extends EventEmitter {
   private constructor(server: http.Server) {
     super();
     this.httpServer = server;
-    this.wss = new WebSocket.server({
+    this.wss = new websocket.server({
       httpServer: this.httpServer,
       keepalive: true,
       keepaliveInterval: 10000,
     });
+    this.wsClient = new websocket.client({
+      closeTimeout: 5000
+    })
     this.setListeners();
   }
 
@@ -125,7 +132,9 @@ export class WebSocketManager extends EventEmitter {
     let extData = null;
     for (let i = 0; i < clientRequestListeners.length; i++) {
       const r = await clientRequestListeners[i](req);
-      type = r.type || type;
+      if (!type && r.type) {
+        type = r.type;
+      }
       extData = r.extData || extData;
     }
     cb({ type, extData });
@@ -135,10 +144,8 @@ export class WebSocketManager extends EventEmitter {
     client: WebSocketExt,
     req: http.IncomingMessage,
   ) {
-    client.ip =
-      client.remoteAddress ||
-      ((req.headers['x-forwarded-for'] as any) || '').split(/\s*,\s*/)[0];
-    client.ip = client.ip.replace(/[^0-9\.]/gi, '');
+    client.ip = ipFromWebSocket(client, req);
+
     logger.info(
       'WebSocket.Server connection client ip -> ' +
         client.ip +
@@ -172,33 +179,26 @@ export class WebSocketManager extends EventEmitter {
       });
     });
 
-    client.addListener('message', (message: WebSocket.Message) => {
-      // logger.debug("on client message: ", message);
-      if (message.type == 'utf8') {
-        try {
-          const json = JSON.parse(message.utf8Data);
-          logger.debug('on client message: ', json);
+    client.addListener('message', (message: websocket.Message) => {
+      const json = parseMessage(message);
+      logger.debug("on client message: ", json);
 
-          if (json.type === 'respond') {
-            const answer = messageAnswer.get(json.message_id);
-            answer && answer(null, json);
-          } else if (json.type === 'log') {
-            deviceLogListeners.forEach((listener) => {
-              listener(client, json);
-            });
-          } else {
-            clientMessageListeners.forEach(async (listener) => {
-              await listener(client, json);
-            });
+      if (json.type === 'respond') {
+        const answer = messageAnswer.get(json.message_id);
+        answer && answer(null, json);
+      } else if (json.type === 'log') {
+        deviceLogListeners.forEach((listener) => {
+          listener(client, json);
+        });
+      } else {
+        clientMessageListeners.forEach(async (listener) => {
+          await listener(client, json);
+        });
 
-            if (json.type === 'hello') {
-              clientStatusChangeListeners.forEach((listener) => {
-                listener(client, 'open');
-              });
-            }
-          }
-        } catch (e) {
-          console.error(e);
+        if (json.type === 'hello') {
+          clientStatusChangeListeners.forEach((listener) => {
+            listener(client, 'open');
+          });
         }
       }
     });
@@ -229,7 +229,7 @@ export class WebSocketManager extends EventEmitter {
   }
 
   public sendMessage(
-    client: WebSocket.connection,
+    client: websocket.connection,
     message: any,
     cb?: (err: Error, data?: any) => {},
   ) {
@@ -248,7 +248,7 @@ export class WebSocketManager extends EventEmitter {
   }
 
   public sendUtf(
-    client: WebSocket.connection,
+    client: websocket.connection,
     message: any,
     cb?: (err: Error, data?: any) => {},
   ) {
@@ -266,7 +266,7 @@ export class WebSocketManager extends EventEmitter {
   }
 
   public sendMessageToClients(
-    clients: WebSocket.connection[],
+    clients: websocket.connection[],
     message: object,
   ) {
     clients.forEach((client) => {
