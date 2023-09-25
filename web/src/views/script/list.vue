@@ -77,7 +77,7 @@ export default {
       request({
         url: "/script/get_script_list",
         method: "get",
-        params: {}
+        params: { noDetail: true }
       }).then(res => {
         this.list = res.data.scripts;
         this.listLoading = false;

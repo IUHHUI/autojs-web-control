@@ -133,7 +133,7 @@ export default {
       request({
         url: "/script/get_script_list",
         method: "get",
-        params: {}
+        params: { noDetail: true }
       }).then(res => {
         this.scripts = res.data.scripts;
         this.listLoading = false;
