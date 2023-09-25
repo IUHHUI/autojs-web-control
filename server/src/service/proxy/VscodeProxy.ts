@@ -1,14 +1,13 @@
-import * as querystring from 'querystring';
 import * as websocket from 'websocket';
 import getLogger from '@/utils/log4js';
 import { parseMessage } from '@/utils/websocket/message';
-import DeviceModel from '@/model/device.model';
 import { WebSocketManager, WebSocketExt } from '../WebSocketManager';
 import moment = require('moment');
 
 const logger = getLogger('VscodeProxy');
-const VscodeExtensionPort = process.env.VSCODE_EXTENSION_PORT || 9318;
-const VscodeproxyOn = process.env.VSCODE_proxy_ON || true;
+const VscodeproxyOn = process.env.VSCODE_EXT_PROXY_ON || true;
+const VscodeExtensionIP = process.env.VSCODE_EXT_IP || 'localhost';
+const VscodeExtensionPort = process.env.VSCODE_EXT_PORT || 9317;
 
 let count = 1;
 /**
@@ -16,7 +15,7 @@ let count = 1;
  */
 export class VscodeProxy {
   static instance: VscodeProxy;
-  private static targetUrl: string = `ws://localhost:${VscodeExtensionPort}/`;
+  private static targetUrl: string = `ws://${VscodeExtensionIP}:${VscodeExtensionPort}/`;
   private static connection: websocket.connection;
   private static clientConnectListeners: Record<string | number, (connection: websocket.connection) => void> = {};
 

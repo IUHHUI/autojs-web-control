@@ -1,3 +1,5 @@
+# Readme
+
 ## Installation
 
 ```bash
@@ -5,6 +7,8 @@ $ npm install
 ```
 
 ## Running the app
+
+use .env or system env vars
 
 ```bash
 # development

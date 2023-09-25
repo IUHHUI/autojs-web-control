@@ -3,6 +3,7 @@
     "device",
     "web",
     "server-script",
-    "server-func"
+    "server-func",
+    "server"
   ]
 }

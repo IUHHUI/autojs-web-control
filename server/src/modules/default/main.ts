@@ -3,21 +3,16 @@
  * 2019-10-25
  */
 // require('module-alias/register');
-const moduleAlias = require('module-alias');
 // moduleAlias.addAlias('@', __dirname + '../../')
+const moduleAlias = require('module-alias');
 moduleAlias.addPath(__dirname + '../../../lib')
 moduleAlias.addAlias('@', (fromPath, request, alias) => {
-  // fromPath - Full path of the file from which `require` was called
-  // request - The path (first argument) that was passed into `require`
-  // alias - The same alias that was passed as first argument to `addAlias` (`@src` in this case)
-
-  // Return any custom target path for the `@src` alias depending on arguments
-  // if (fromPath.startsWith(__dirname + '/others')) return __dirname + '/others'
   // console.log('addAlias', fromPath, request)
   if (/node_modules/.test(fromPath)) return __dirname
 
   return __dirname + '../../../'
 })
+require('dotenv').config();
 import * as koaLogger from 'koa-logger';
 import { createApplication } from '@/common/application';
 import { NODE_ENV } from '@/utils/enums';
