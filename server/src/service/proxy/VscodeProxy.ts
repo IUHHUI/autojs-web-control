@@ -31,6 +31,7 @@ export class VscodeProxy {
     client.connect(this.targetUrl);
 
     client.on('connect', (connection: websocket.connection) => {
+      logger.info(`VscodeProxy try connect -> ${this.targetUrl}`);
       for (const id in this.clientConnectListeners) {
         const listener = this.clientConnectListeners[id];
         listener(connection);
@@ -114,6 +115,10 @@ export class VscodeProxy {
           deviceConnection.vscodeConnection.sendUTF(JSON.stringify(message));
         }
       }
+    });
+
+    WebSocketManager.getInstance().addDeviceLogListener((client, data) => {
+      client.vscodeConnection && client.vscodeConnection.sendUTF(JSON.stringify(data));
     });
 
     WebSocketManager.getInstance().addClientStatusChangeListener((client, status) => {
