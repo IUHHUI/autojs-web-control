@@ -1,6 +1,6 @@
 ## AutoJs Web Control
 
-[体验地址](http://47.113.101.40:9317/)
+fork from [autojs-web-control](https://github.com/zrk1993/autojs-web-control)
 
 nodejs typescript vuejs  [SoulJs](https://github.com/zrk1993/souljs) [AutoJs](https://github.com/hyb1996/Auto.js)
 
@@ -10,10 +10,21 @@ nodejs typescript vuejs  [SoulJs](https://github.com/zrk1993/souljs) [AutoJs](ht
 2. 脚本开发
 3. 定时任务
 4. 实时日志
+5. 支持代理到VS code插件（2023.09.25）
+6.
 
 ## USE
-1. 下载Autojs
-2. 连接电脑，地址 47.113.101.40:9317
+
+### 1. 下载Autojs
+
+### 2. 部署服务
+#### Docker(recommend)
+
+build Dockerfile and run
+
+#### 3. 设备连接服务端
+
+使用Autojs连接电脑功能 47.113.101.40:9319
 
 ## image
 
