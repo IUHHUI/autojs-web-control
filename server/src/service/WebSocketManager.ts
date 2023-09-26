@@ -270,7 +270,10 @@ export class WebSocketManager extends EventEmitter {
     });
   }
 
-  public getClients() {
-    return this.wss.connections as WebSocketExt[];
+  public getClients(type?: WebSocketExt['type']) {
+    const clients = this.wss.connections as WebSocketExt[];
+
+    console.log(clients.map((c) => c.type));
+    return type ? clients.filter((c) => c.type === type) : clients;
   }
 }
