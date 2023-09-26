@@ -43,8 +43,8 @@ export class AdminSocketManager {
 
     WebSocketManager.getInstance().addClientStatusChangeListener((client, status) => {
       if (client.type === 'device') {
+        logger.info('WebSocket.Client device_change ip -> ' + client.ip + ' status -> ' + status);
         WebSocketManager.getInstance().getClients('admin').forEach((c) => {
-          logger.info('WebSocket.Client device_change ip -> ' + client.ip + ' status -> ' + status);
           WebSocketManager.getInstance().sendMessage(c, { type: 'device_change', data: { status } });
         });
       }

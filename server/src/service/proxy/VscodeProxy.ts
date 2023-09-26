@@ -62,14 +62,15 @@ export class VscodeProxy {
       this.removeClientConnectListener(deviceConnection.name); // 只执行一次建立连接的过程，建立完成后就删除监听器
     } else if (message.type === 'pong') {
       logger.debug(`VscodeProxy on server pong device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`);
-    } else if (message.type === 'command') {
-      logger.debug(`VscodeProxy on server pong device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`);
-      serverCommandListeners.forEach((listener) => {
-        listener(deviceConnection, message.data || {});
-      });
     } else {
+      if (message.type === 'command') {
+        logger.debug(`VscodeProxy on server pong device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`);
+        serverCommandListeners.forEach((listener) => {
+          listener(deviceConnection, message.data || {});
+        });
+      }
       deviceConnection.sendUTF(JSON.stringify(message));
-      logger.info(`VscodeProxy on server message device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`, message.type);
+      // logger.info(`VscodeProxy on server message device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`, message.type);
     }
   }
 
