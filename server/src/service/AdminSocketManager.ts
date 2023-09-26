@@ -1,8 +1,6 @@
 import * as querystring from 'querystring';
 import * as http from 'http';
-import * as moment from 'moment';
 import getLogger from '@/utils/log4js';
-import ScriptModel from '@/model/script.model';
 import { verifyToken } from '@/middleware/app-jwt';
 import { WebSocketManager, WebSocketExt } from './WebSocketManager';
 import { VscodeProxy } from './proxy/VscodeProxy';
@@ -53,23 +51,11 @@ export class AdminSocketManager {
     VscodeProxy.getInstance().addServerCommandListener(async (deviceConnection, command) => {
       logger.debug('WebSocket.Client VscodeProxy command -> ' + JSON.stringify(command));
       if (command.command === 'save') {
-        const matches = (command.name || '').match(/.*\\?\\([^\\]+)\.js$/);
-        const name = (matches && matches[1]) || '';
-        const script = command.script;
-
-        const scriptData = {
-          script_name: name,
-          script,
-          script_args: command.args,
-          create_time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-        };
         // logger.info('WebSocket.Client VscodeProxy command -> ' + ' message -> ' + JSON.stringify(command));
-
         WebSocketManager.getInstance().getClients('admin').forEach(async (c) => {
           WebSocketManager.getInstance().sendMessage(c, { type: 'command', data: command });
         });
 
-        await ScriptModel.upsertBy('script_name', scriptData);
       }
     })
   }

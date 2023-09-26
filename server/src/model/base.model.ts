@@ -43,15 +43,12 @@ export default class BaseService<T> {
     const exist = await db.table(this.$tableName).where({ [key]: v }).findOrEmpty();
 
     if (exist) {
-      if (exist.update_time) {
-        exist.update_time = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
-      }
-      if (exist.create_time) {
-        exist.create_time = undefined
+      const newData = { ...exist, ...data };
+      if (newData.update_time) {
+        newData.update_time = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
       }
 
-      const id = exist[this.$primaryKey];
-      const newData = { ...exist, ...data };
+      const id = newData[this.$primaryKey];
       await this.updateById(id, newData);
 
       return newData

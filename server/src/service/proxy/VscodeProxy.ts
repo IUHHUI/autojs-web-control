@@ -1,6 +1,8 @@
 import * as websocket from 'websocket';
+import * as moment from 'moment';
 import getLogger from '@/utils/log4js';
 import { parseMessage } from '@/utils/websocket/message';
+import ScriptModel from '@/model/script.model';
 import { WebSocketManager, WebSocketExt, IClientMessageListener } from '../WebSocketManager';
 
 const logger = getLogger('VscodeProxy');
@@ -52,6 +54,21 @@ export class VscodeProxy {
     serverCommandListeners.splice(serverCommandListeners.indexOf(listener), 1);
   }
 
+  public static async onSaveCommand(deviceConnection, command) {
+    const matches = (command.name || '').match(/.*\\?\\([^\\]+)\.js$/);
+    const name = (matches && matches[1]) || '';
+    const script = command.script;
+
+    const scriptData = {
+      script_name: name,
+      script,
+      script_args: command.args,
+      create_time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+    };
+
+    await ScriptModel.upsertBy('script_name', scriptData);
+  }
+
   private static onServerMessage(message: any, deviceConnection: WebSocketExt) {
     if (!message) {
       return;
@@ -64,10 +81,15 @@ export class VscodeProxy {
       logger.debug(`VscodeProxy on server pong device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`);
     } else {
       if (message.type === 'command') {
-        logger.debug(`VscodeProxy on server pong device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`);
-        serverCommandListeners.forEach((listener) => {
-          listener(deviceConnection, message.data || {});
-        });
+        if (message.data) {
+          logger.info(`VscodeProxy on server command device -> ${deviceConnection.name} -> ${message.data.command}`);
+          if (message.data.command === 'save') {
+            this.onSaveCommand(deviceConnection, message.data);
+          }
+          serverCommandListeners.forEach((listener) => {
+            listener(deviceConnection, message.data);
+          });
+        }
       }
       deviceConnection.sendUTF(JSON.stringify(message));
       // logger.info(`VscodeProxy on server message device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`, message.type);
