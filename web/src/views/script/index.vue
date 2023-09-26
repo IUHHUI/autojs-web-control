@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import request from "@/utils/request";
 import DeviceLog from "@/components/DeviceLog";
 
@@ -68,7 +68,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["name"])
+    ...mapGetters(["name"]),
   },
   created() {
     this.scriptData.script_id = this.$route.query.id;
@@ -95,8 +95,19 @@ export default {
     document.removeEventListener("keydown", this.saveListener);
   },
   methods: {
+    ...mapActions(["script/updateList"]),
     newAddPage() {
       window.open("/#/develop");
+    },
+    getScripts() {
+      request({
+        url: "/script/get_script_list",
+        method: "get",
+        params: { noDetail: true }
+      }).then(res => {
+        this.scripts = res.data.scripts;
+        this["script/updateList"](this.scripts);
+      });
     },
     fetchData() {
       this.listLoading = true;
@@ -139,6 +150,7 @@ export default {
               query: { id: res.data.script_id }
             });
           }
+          this.getScripts();
         })
         .finally(() => {
           this.bustling = false;

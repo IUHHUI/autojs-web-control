@@ -69,6 +69,7 @@
 <script>
 import request from "@/utils/request";
 import parser from "cron-parser";
+import { mapActions } from 'vuex';
 
 export default {
   data() {
@@ -97,6 +98,7 @@ export default {
     this.getScripts();
   },
   methods: {
+    ...mapActions(["script/updateList"]),
     cancel(data) {
       this.$emit("callback", data);
     },
@@ -136,6 +138,7 @@ export default {
         params: { noDetail: true }
       }).then(res => {
         this.scripts = res.data.scripts;
+        this["script/updateList"](this.scripts);
         this.listLoading = false;
       });
     }

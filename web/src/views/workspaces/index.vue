@@ -74,7 +74,7 @@
 <script>
 import request from "@/utils/request";
 import DeviceLog from "@/components/DeviceLog";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "Dashboard",
   components: {
@@ -132,6 +132,7 @@ export default {
     this.dragDivide();
   },
   methods: {
+    ...mapActions(["script/updateList"]),
     checkTag(tag) {
       if (this.checkedTag.includes(tag)) {
         this.checkedTag.splice(this.checkedTag.indexOf(tag), 1);
@@ -161,6 +162,7 @@ export default {
         params: { noDetail: true }
       }).then(res => {
         this.scripts = res.data.scripts;
+        this["script/updateList"](this.scripts);
         this.listLoading = false;
       });
     },

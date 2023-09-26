@@ -55,6 +55,7 @@
 
 <script>
 import request from "@/utils/request";
+import { mapActions } from "vuex";
 
 export default {
   filters: {
@@ -68,10 +69,13 @@ export default {
       listLoading: true
     };
   },
+  computed: {
+  },
   created() {
     this.fetchData();
   },
   methods: {
+    ...mapActions(["script/updateList"]),
     fetchData() {
       this.listLoading = true;
       request({
@@ -80,6 +84,7 @@ export default {
         params: { noDetail: true }
       }).then(res => {
         this.list = res.data.scripts;
+        this["script/updateList"](this.scripts);
         this.listLoading = false;
       });
     },

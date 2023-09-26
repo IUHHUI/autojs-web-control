@@ -58,6 +58,24 @@ WebSocketClientManager.getInstance().addMessageListener((msg) => {
     //
   }
 
+  if (msg.type === 'command') {
+    const command = msg.data || {};
+
+    if (command.command === 'save') {
+      const matches = (command.name || '').match(/.*\\?\\([^\\]+)\.js$/);
+      const name = (matches && matches[1]) || '';
+      const script = command.script;
+      const serverScript = store.getters['script/scriptByName'](name);
+      const scriptData = {
+        ...(serverScript || {}),
+        script,
+        script_name: name,
+      };
+      console.log(name, script.length, serverScript, scriptData);
+      // TODO 展示
+    }
+  }
+
   if (msg.type === 'device_change') {
     store.dispatch('device/updateOnlineDevices');
   }
