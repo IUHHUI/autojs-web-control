@@ -5,6 +5,7 @@
     "server-script",
     "server-func",
     "server",
-    "server-device"
+    "server-device",
+    "docker"
   ]
 }

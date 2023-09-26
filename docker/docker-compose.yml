@@ -1,0 +1,34 @@
+version: "3"
+
+# x-common: &common
+#   image: autojs-web-control:latest
+#   build:
+#     context: .
+#     dockerfile: ./Dockerfile
+#   restart: always
+
+services:
+  awc-server:
+    image: autojs-web-control
+    container_name: autojs-web-control-server
+    command: ["--server"]
+    env_file:
+      - .env
+    volumes:
+      - /data/server/log:/app/autojs-web-control/server/log
+    ports:
+      - 9319:9319 # Web UI
+    restart: unless-stopped
+  awc-web:
+    image: autojs-web-control
+    container_name: autojs-web-control-web
+    command: ["--web"]
+    env_file:
+      - .env
+    # volumes:
+    #   - /data/web/log:/web/log
+    ports:
+      - 9528:9526 # Web UI
+    restart: unless-stopped
+
+# docker-compose up -d

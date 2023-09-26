@@ -18,9 +18,19 @@ nodejs typescript vuejs  [SoulJs](https://github.com/zrk1993/souljs) [AutoJs](ht
 ### 1. 下载Autojs
 
 ### 2. 部署服务
+
 #### Docker(recommend)
 
-build Dockerfile and run
+build Dockerfile
+`
+docker build -t autojs-web-control -f docker/Dockerfile .
+`
+
+run with
+`
+cd docker
+docker-compose up -d --force-recreate
+`
 
 #### 3. 设备连接服务端
 
