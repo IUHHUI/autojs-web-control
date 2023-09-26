@@ -43,9 +43,9 @@ async function main() {
 
   WebSocketManager.init(app.getHttpServer());
   DeviceManager.init();
+  VscodeProxy.init();
   AdminSocketManager.init();
   await SchedulerManager.init();
-  VscodeProxy.init();
 }
 
 process.on('rejectionHandled', logger.error.bind(logger));
