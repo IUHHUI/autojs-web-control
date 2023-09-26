@@ -1,5 +1,9 @@
 # Readme
 
+## 已知问题
+
+前端开多个页面，一些处理会重复
+
 ## Installation
 
 ```bash
