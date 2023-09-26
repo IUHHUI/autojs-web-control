@@ -4,6 +4,7 @@
     "web",
     "server-script",
     "server-func",
-    "server"
+    "server",
+    "server-device"
   ]
 }

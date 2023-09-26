@@ -46,7 +46,6 @@ export class DeviceManager {
     } else {
       returnData = { data: "连接成功", debug: DEBUG, type: 'hello' }
     }
-    returnData = {"message_id":"1695436711356_0.39375184743990976","data":"ok","version":"1.109.0","debug":true,"type":"hello"}
 
     logger.debug("return data: ", returnData)
     WebSocketManager.getInstance().sendUtf(client, returnData);

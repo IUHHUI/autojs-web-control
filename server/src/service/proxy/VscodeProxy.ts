@@ -2,7 +2,6 @@ import * as websocket from 'websocket';
 import getLogger from '@/utils/log4js';
 import { parseMessage } from '@/utils/websocket/message';
 import { WebSocketManager, WebSocketExt } from '../WebSocketManager';
-import moment = require('moment');
 
 const logger = getLogger('VscodeProxy');
 const VscodeproxyOn = process.env.VSCODE_EXT_PROXY_ON || true;
@@ -16,7 +15,6 @@ let count = 1;
 export class VscodeProxy {
   static instance: VscodeProxy;
   private static targetUrl: string = `ws://${VscodeExtensionIP}:${VscodeExtensionPort}/`;
-  private static connection: websocket.connection;
   private static clientConnectListeners: Record<string | number, (connection: websocket.connection) => void> = {};
 
   public static getInstance() {
@@ -71,10 +69,6 @@ export class VscodeProxy {
     const client = WebSocketManager.getInstance().wsClient;
     client.connect(this.targetUrl);
     // logger.info(`VscodeProxy try connect -> ${deviceConnection.name} -> ${this.targetUrl}`);
-
-    // client.on('connectFailed', (err) => {
-    //   logger.error(`VscodeProxy connect failed! device -> ${deviceConnection.name}`, err);
-    // });
   }
 
   private static async proxySetup() {

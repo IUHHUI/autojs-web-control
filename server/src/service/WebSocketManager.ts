@@ -81,10 +81,6 @@ export class WebSocketManager extends EventEmitter {
   }
 
   private setListeners() {
-    // this.httpServer.on('upgrade', (request, socket, head) => {
-    //   this.wss.handleUpgrade(request, socket);
-    // });
-
     this.wss.on('request', (request) => {
       this.authenticate(request.httpRequest, (authenticateInfo) => {
         const connection = request.accept() as WebSocketExt;
@@ -98,7 +94,7 @@ export class WebSocketManager extends EventEmitter {
 
           connection.type = authenticateInfo.type as WebSocketExt['type'];
           connection.extData = authenticateInfo.extData;
-          // this.emit('connection', connection, request.httpRequest); // ok.
+
           this.onWebSocketConnection(connection, request.httpRequest);
         }
       });
