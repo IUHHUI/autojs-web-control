@@ -22,16 +22,18 @@ export class DeviceManager {
     const { name, ip } = params;
     const deviceName = name || ip;
 
-    let device = await DeviceModel.getByDeviceName(deviceName as string);
-    // let device = await DeviceModel.getUnion(deviceName, ip);
-    if (!device) {
-      await DeviceModel.insert({ name: deviceName, ip, create_time: moment().format('YYYY-MM-DD HH:mm:ss') });
-    }
+    // let device = await DeviceModel.getByDeviceName(deviceName as string);
+    // // let device = await DeviceModel.getUnion(deviceName, ip);
+    // if (!device) {
+    //   await DeviceModel.insert({ name: deviceName, ip, create_time: moment().format('YYYY-MM-DD HH:mm:ss') });
+    // }
 
-    // device = await DeviceModel.getByDeviceName(deviceName);
-    await DeviceModel.updateById(device.device_id, { connect_time: moment().format('YYYY-MM-DD HH:mm:ss') });
+    // // device = await DeviceModel.getByDeviceName(deviceName);
+    // await DeviceModel.updateById(device.device_id, { connect_time: moment().format('YYYY-MM-DD HH:mm:ss') });
+    let device = { name: deviceName, ip, connect_time: moment().format('YYYY-MM-DD HH:mm:ss') };
+    await DeviceModel.upsertBy('name', device);
 
-    return device
+    return device;
   }
 
   private static async clientHelloListener(client: WebSocketExt, data) {

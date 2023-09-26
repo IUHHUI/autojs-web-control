@@ -31,23 +31,11 @@ export default class BaseService<T> {
   async insert(data: T): Promise<any>;
   async insert(data: T[]): Promise<void>;
   async insert(data: T|T[]): Promise<any> {
-    return await db.table(this.$tableName).insert(data);
+    return await db.table(this.$tableName).insert({ ...data, create_time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss') });
   }
 
   async updateById(id: string|number, data: T) {
     return await db.table(this.$tableName).where({ [this.$primaryKey]: id }).update(data);
-  }
-
-  async upsertById(data: T) {
-    const id = data[this.$primaryKey];
-    if (id) {
-      const exist = await this.getById(id);
-      if (exist) {
-        return this.updateById(id, data);
-      }
-    }
-
-    return this.insert(data);
   }
 
   async upsertBy(key: string, data: T) {
@@ -70,5 +58,8 @@ export default class BaseService<T> {
     } else {
       return await this.insert(data);
     }
+  }
+  async upsertById(data: T) {
+    return this.upsertBy(this.$primaryKey, data);
   }
 }
