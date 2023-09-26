@@ -51,12 +51,16 @@ export default class BaseService<T> {
       }
 
       const id = exist[this.$primaryKey];
-      return await this.updateById(id, {
-        ...exist,
-        ...data
-      });
+      const newData = { ...exist, ...data };
+      await this.updateById(id, newData);
+
+      return newData
     } else {
-      return await this.insert(data);
+      const id = (await this.insert(data) || {}).insertId;
+      return {
+        ...data,
+        [this.$primaryKey]: id
+      }
     }
   }
   async upsertById(data: T) {

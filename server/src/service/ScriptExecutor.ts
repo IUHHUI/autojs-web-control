@@ -1,5 +1,9 @@
+import getLogger from '@/utils/log4js';
+
 import { WebSocketManager } from './WebSocketManager';
 import { DeviceManager } from './DeviceManager';
+
+const logger = getLogger('ScriptExecutor');
 
 export default class ScriptExecutor {
   private static instance: ScriptExecutor;
@@ -28,8 +32,9 @@ export default class ScriptExecutor {
       }
     };
 
-    WebSocketManager.getInstance().getClients().forEach((client) => {
-      if (client.type === 'device' && (!devices || devices.includes(client.extData.device_id))) {
+    logger.debug(`ScriptExecutor run -> ${fileName} -> ${ol.map((d) => d.device_name).join(',')}`);
+    WebSocketManager.getInstance().getClients('device').forEach((client) => {
+      if (!devices || devices.includes(client.extData.device_id)) {
         WebSocketManager.getInstance().sendMessage(client, data);
       }
     });

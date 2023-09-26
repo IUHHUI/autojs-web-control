@@ -30,10 +30,10 @@ export class DeviceManager {
 
     // // device = await DeviceModel.getByDeviceName(deviceName);
     // await DeviceModel.updateById(device.device_id, { connect_time: moment().format('YYYY-MM-DD HH:mm:ss') });
-    let device = { name: deviceName, ip, connect_time: moment().format('YYYY-MM-DD HH:mm:ss') };
-    await DeviceModel.upsertBy('name', device);
 
-    return device;
+    const device = await DeviceModel.upsertBy('name', { name: deviceName, ip, connect_time: moment().format('YYYY-MM-DD HH:mm:ss') });
+    return device
+    //return await DeviceModel.upsertBy('name', { name: deviceName, ip, connect_time: moment().format('YYYY-MM-DD HH:mm:ss') });
   }
 
   private static async clientHelloListener(client: WebSocketExt, data) {
