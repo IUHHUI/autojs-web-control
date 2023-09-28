@@ -21,16 +21,22 @@ nodejs typescript vuejs  [SoulJs](https://github.com/zrk1993/souljs) [AutoJs](ht
 
 #### Docker(recommend)
 
-build Dockerfile
-`
++ build Dockerfile(or use wangnew2013/autojs-web-control)
+```
 docker build -t autojs-web-control -f docker/Dockerfile .
-`
+```
 
-run with
-`
++ copy `docker/.example.env` -> `docker/.env` (or use other way define env in docker)
+
++ run with
+```
 cd docker
-docker-compose up -d --force-recreate
-`
+docker-compose --project-name "autojs-web-control" up -d --force-recreate
+```
+
++ 修改前端环境变量需要用vue-cli的方式
+
+复制`web/.env.production.example` -> `web/.env.production`，重新打包
 
 ### 3. 设备连接服务端
 
