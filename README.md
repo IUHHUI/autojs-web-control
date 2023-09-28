@@ -32,7 +32,7 @@ cd docker
 docker-compose up -d --force-recreate
 `
 
-#### 3. 设备连接服务端
+### 3. 设备连接服务端
 
 使用Autojs连接电脑功能 47.113.101.40:9319
 
