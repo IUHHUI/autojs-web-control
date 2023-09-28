@@ -7,9 +7,11 @@ version: "3"
 #     dockerfile: ./Dockerfile
 #   restart: always
 
+# name: autojs-web-control # Added in version 3.4 file format.
 services:
   awc-server:
-    image: autojs-web-control
+    image: wangnew2013/autojs-web-control
+    # image: autojs-web-control
     container_name: autojs-web-control-server
     command: ["--server"]
     env_file:
@@ -20,7 +22,8 @@ services:
       - 9319:9319 # Web UI
     restart: unless-stopped
   awc-web:
-    image: autojs-web-control
+    image: wangnew2013/autojs-web-control
+    # image: autojs-web-control
     container_name: autojs-web-control-web
     command: ["--web"]
     env_file:
@@ -28,7 +31,7 @@ services:
     # volumes:
     #   - /data/web/log:/web/log
     ports:
-      - 9528:9526 # Web UI
+      - 9528:9528 # Web UI
     restart: unless-stopped
 
 # docker-compose up -d

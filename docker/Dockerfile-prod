@@ -1,0 +1,54 @@
+# 纯生产版本，一定先构建好
+FROM node:14 as base
+ENV GIT_REPO=https://github.com/awamwang/autojs-web-control.git \
+  PROJECT_NAME=autojs-web-control
+
+# install deps
+FROM base as deps
+WORKDIR /app/${PROJECT_NAME}
+ADD ./server/package.json ./server/package-lock.json ./server/
+ADD ./web/package.json ./web/package-lock.json ./web/
+RUN npm set progress=false
+RUN cd /app/${PROJECT_NAME}/server && npm install --only=production --registry=https://registry.npmmirror.com \
+  && cd /app/${PROJECT_NAME}/web && npm install --only=production --registry=https://registry.npmmirror.com \
+  && npm install runjs chalk --registry=https://registry.npmmirror.com
+# ADD ./server/package.json ./server/package-lock.json ./server_deps/
+# ADD ./web/package.json ./web/package-lock.json ./web_deps/
+# RUN npm set progress=false
+# RUN cd /tmp/server_deps && npm install --only=production --registry=https://registry.npmmirror.com && cd /tmp/web_deps && npm install --only=production --registry=https://registry.npmmirror.com
+
+# files
+FROM deps as files
+WORKDIR /app/${PROJECT_NAME}
+COPY ./server/lib/soul-orm/ ./server/node_modules/soul-orm/
+COPY ./server/lib/souljs/ ./server/node_modules/souljs/
+COPY ./web/vue.config.js ./web/
+COPY ./web/src/settings.js ./web/src/
+COPY ./web//mock/mock-server.js ./web/mock/
+COPY docker/docker-entrypoint.sh .
+
+# build
+FROM files as build
+COPY ./server/dist/ ./server/dist/
+COPY ./web/build/ ./web/build
+COPY ./web/dist/ ./web/dist/
+
+# app
+FROM build
+WORKDIR /app/${PROJECT_NAME}
+ENV DB_HOST=localhost \
+  DB_PORT=3306 \
+  DB_USER=root \
+  DB_PASSWORD=123321 \
+  DB_NAME=cloud_auto \
+  DB_DEBUG=false \
+  SERVER_LOG_LEVEL=DEBUG \
+  VSCODE_EXT_PROXY_ON=true \
+  VSCODE_EXT_IP=localhost \
+  VSCODE_EXT_PORT=9317
+RUN chmod +x ./docker-entrypoint.sh
+ENTRYPOINT [ "bash", "docker-entrypoint.sh" ]
+# ENTRYPOINT ["echo", "Hello user"]
+EXPOSE 9319
+EXPOSE 9528
+CMD [ "--server", "--web" ]

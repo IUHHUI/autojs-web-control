@@ -38,6 +38,12 @@ docker-compose --project-name "autojs-web-control" up -d --force-recreate
 
 复制`web/.env.production.example` -> `web/.env.production`，重新打包
 
+#### 源码
+
++ 由于依赖没有更新过，用npm以外的包管理器容易依赖不匹配
++ server端，安装依赖`npm install`， 打包`npm run build`，启动`npm run start`
++ web端，安装依赖`npm install`， 打包`npm run build`，启动`npm run start`
+
 ### 3. 设备连接服务端
 
 使用Autojs连接电脑功能 47.113.101.40:9319

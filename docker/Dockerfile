@@ -5,8 +5,8 @@ ENV GIT_REPO=https://github.com/awamwang/autojs-web-control.git \
 # install
 FROM base as deps
 WORKDIR /tmp
-ADD ./server/package.json ./server_deps/
-ADD ./web/package.json ./web_deps/
+ADD ./server/package.json ./server/package-lock.json ./server_deps/
+ADD ./web/package.json ./web/package-lock.json ./web_deps/
 RUN npm set progress=false
 RUN cd /tmp/server_deps && npm install --only=production --registry=https://registry.npmmirror.com && cd /tmp/web_deps && npm install --only=production --registry=https://registry.npmmirror.com
 RUN cp -R /tmp/server_deps prod_server_deps && cp -R /tmp/web_deps prod_web_deps
