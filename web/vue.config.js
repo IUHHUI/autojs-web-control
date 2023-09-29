@@ -13,9 +13,9 @@ const name = defaultSettings.title || 'vue Admin Template'; // page title
 // For example, Mac: sudo npm run
 // You can change the port by the following methods:
 // port = 9528 npm run dev OR npm run dev --port = 9528
-const { port: envPort, npm_config_port, VUE_APP_PORT, VUE_APP_BASE_API } = process.env || {};
-const port = envPort || npm_config_port || VUE_APP_PORT || 9528; // dev port
-const apiUrl = VUE_APP_BASE_API || 'http://localhost:9319';
+const { port: envPort, npm_config_port, WEB_PORT, WEB_BASE_API } = process.env || {};
+const port = envPort || npm_config_port || WEB_PORT || 9528; // dev port
+const apiUrl = WEB_BASE_API || 'http://localhost:9319';
 // console.log(`apiUrl: ${apiUrl}; webport: ${port}`);
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
