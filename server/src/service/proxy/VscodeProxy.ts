@@ -176,11 +176,11 @@ export class VscodeProxy {
 
     this.proxySetup();
 
-    WebSocketManager.getInstance().addClientRequestListeners(async (req) => {
-      console.log('VscodeProxy on client request', req.connection.remoteAddress);
+    // WebSocketManager.getInstance().addClientRequestListeners(async (req) => {
+    //   console.log('VscodeProxy on client request', req.connection.remoteAddress);
 
-      return { type: null };
-    });
+    //   return { type: null };
+    // });
 
     // WebSocketManager.getInstance().addClientStatusChangeListener((client, status) => {
     //   if (status === 'open' && client.type === 'device') {
