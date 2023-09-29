@@ -63,7 +63,6 @@ export class VscodeProxy {
       script_name: name,
       script,
       script_args: command.args,
-      create_time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     };
 
     await ScriptModel.upsertBy('script_name', scriptData);
