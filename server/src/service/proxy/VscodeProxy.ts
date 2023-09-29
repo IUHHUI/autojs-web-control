@@ -6,7 +6,7 @@ import ScriptModel from '@/model/script.model';
 import { WebSocketManager, WebSocketExt, IClientMessageListener } from '../WebSocketManager';
 
 const logger = getLogger('VscodeProxy');
-const VscodeproxyOn = process.env.VSCODE_EXT_PROXY_ON || true;
+const VscodeproxyOn = process.env.VSCODE_EXT_PROXY_ON !== undefined ? process.env.VSCODE_EXT_PROXY_ON : true;
 const VscodeExtensionIP = process.env.VSCODE_EXT_IP || 'localhost';
 const VscodeExtensionPort = process.env.VSCODE_EXT_PORT || 9317;
 
@@ -176,11 +176,11 @@ export class VscodeProxy {
 
     this.proxySetup();
 
-    WebSocketManager.getInstance().addClientRequestListeners(async (req) => {
-      console.log('VscodeProxy on client request', req.connection.remoteAddress);
+    // WebSocketManager.getInstance().addClientRequestListeners(async (req) => {
+    //   console.log('VscodeProxy on client request', req.connection.remoteAddress);
 
-      return { type: null };
-    });
+    //   return { type: null };
+    // });
 
     // WebSocketManager.getInstance().addClientStatusChangeListener((client, status) => {
     //   if (status === 'open' && client.type === 'device') {
