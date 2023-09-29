@@ -47,7 +47,7 @@ fi
 if [ $START_WEB == 1 ]
 then
     echo "start web" && cd ./web
-    npm run start
+    npm run start:env
     # if [ $START_SERVER == 1 ]
     # then
     #      `npm run start&` && echo "web started"

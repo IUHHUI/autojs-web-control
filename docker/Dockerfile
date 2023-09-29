@@ -37,7 +37,10 @@ ENV DB_HOST=localhost \
   SERVER_LOG_LEVEL=DEBUG \
   VSCODE_EXT_PROXY_ON=true \
   VSCODE_EXT_IP=localhost \
-  VSCODE_EXT_PORT=9317
+  VSCODE_EXT_PORT=9317 \
+  WEB_PORT=9528 \
+  WEB_BASE_API=http://47.108.180.116:9319 \
+  WEB_WS_HOST=ws://47.108.180.116:9319
 WORKDIR /app/${PROJECT_NAME}
 COPY docker/docker-entrypoint.sh /app/${PROJECT_NAME}
 RUN chmod +x ./docker-entrypoint.sh
