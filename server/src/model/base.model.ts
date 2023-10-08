@@ -31,7 +31,8 @@ export default class BaseService<T> {
   async insert(data: T): Promise<any>;
   async insert(data: T[]): Promise<void>;
   async insert(data: T|T[]): Promise<any> {
-    return await db.table(this.$tableName).insert({ ...data, create_time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss') });
+    const currTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+    return await db.table(this.$tableName).insert({ ...data,  create_time: currTime, update_time: currTime });
   }
 
   async updateById(id: string|number, data: T) {
@@ -40,7 +41,8 @@ export default class BaseService<T> {
 
   async upsertBy(key: string, data: T) {
     const v = data[key];
-    const exist = await db.table(this.$tableName).where({ [key]: v }).findOrEmpty();
+    const table = db.table(this.$tableName)
+    const exist = await table.where({ [key]: v }).findOrEmpty();
 
     if (exist) {
       const newData = { ...exist, ...data };

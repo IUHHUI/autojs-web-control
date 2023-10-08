@@ -16,7 +16,7 @@ export class DeviceModel extends BaseModel<ITableStructure> {
     if (noDetail) {
       return this.$db.table(this.$tableName).field('script_id', 'script_name', 'script_args', 'create_time', 'update_time').select();
     } else {
-      return this.$db.table(this.$tableName).select();
+      return this.$db.table(this.$tableName).field('*').select();
     }
   }
 }
