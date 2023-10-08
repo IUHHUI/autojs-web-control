@@ -17,7 +17,8 @@ services:
     env_file:
       - .env
     volumes:
-      - /data/server/log:/app/autojs-web-control/server/log
+      - ./data/server/log:/app/autojs-web-control/server/log
+      - ./data/server/scripts:/app/autojs-web-control/server/scripts
     ports:
       - 9319:9319 # Web UI
     restart: unless-stopped
