@@ -72,9 +72,12 @@ export default class ScriptWatcher {
     }
 
     this.watcher = chokidar.watch(scriptsGlob, {
-      // ignoreInitial: true,
+      ignoreInitial: false,
       // useFsEvents: true,
-      // usePolling: true
+      usePolling: true,
+      // alwaysStat: true,
+      awaitWriteFinish : true,
+      ignorePermissionErrors: true
     });
 
     this.watcher.on('add', (p) => {
