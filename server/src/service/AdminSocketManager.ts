@@ -48,7 +48,7 @@ export class AdminSocketManager {
       }
     });
 
-    VscodeProxy.getInstance().addServerCommandListener(async (deviceConnection, command) => {
+   VscodeProxy.getInstance() && VscodeProxy.getInstance().addServerCommandListener(async (deviceConnection, command) => {
       logger.debug('WebSocket.Client VscodeProxy command -> ' + JSON.stringify(command));
       if (command.command === 'save') {
         // logger.info('WebSocket.Client VscodeProxy command -> ' + ' message -> ' + JSON.stringify(command));
