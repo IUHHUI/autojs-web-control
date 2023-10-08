@@ -18,6 +18,14 @@ class QueryBuilder {
     static table(table, opt) {
         return new QueryBuilder({ table, queryFunction: opt.queryFunction });
     }
+    fields() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const sql = `select COLUMN_NAME from information_schema.COLUMNS where table_name = '${this.$table}';`;
+            this.sql = sqlstring.format(sql, []);
+            const result = yield this.exec();
+            return result;
+        });
+    }
     select() {
         return __awaiter(this, void 0, void 0, function* () {
             let sql = '';

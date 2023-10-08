@@ -23,6 +23,14 @@ export class QueryBuilder {
     this.queryFunction = queryFunction;
   }
 
+  public async fields(): Promise<string[]> {
+    const sql = `select COLUMN_NAME from information_schema.COLUMNS where table_name = '${this.$table}';`;
+
+    this.sql = sqlstring.format(sql, []);
+    const result: any = await this.exec();
+    return result;
+  }
+
   public async select(): Promise<any[]> {
     let sql = '';
     const inserts = [];

@@ -11,7 +11,7 @@ nodejs typescript vuejs  [SoulJs](https://github.com/zrk1993/souljs) [AutoJs](ht
 3. 定时任务
 4. 实时日志
 5. 支持代理到VS code插件（2023.09.25）
-6.
+6. 自动同步scripts目录到数据库，方便开发调试（2023.10.08）
 
 ## USE
 

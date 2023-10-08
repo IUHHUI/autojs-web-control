@@ -13,6 +13,7 @@
     "allowJs": true,
     "outDir": "dist",
     "lib": [
+      "dom",
       "es7"
     ]
   },
