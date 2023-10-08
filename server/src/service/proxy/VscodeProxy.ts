@@ -165,7 +165,7 @@ export class VscodeProxy {
 
   public static init() {
     if (!VscodeproxyOn) {
-      logger.info('VscodeProxy Switch Off!');
+      logger.info('VscodeProxy Switch off!');
       return;
     }
 

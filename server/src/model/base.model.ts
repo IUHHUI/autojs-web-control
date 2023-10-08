@@ -6,10 +6,25 @@ export default class BaseService<T> {
   $tableName: string;
   $primaryKey: string;
   $tableStructure: T;
+  $fields: string[];
 
   constructor(args: { tableName: string, primaryKey?: string }) {
     this.$tableName = args.tableName;
     this.$primaryKey = args.primaryKey || `${args.tableName}_id`;
+  }
+
+  async getFields(forceUpdate?: boolean): Promise<string[]> {
+    if (!forceUpdate && this.$fields) {
+      return this.$fields;
+    }
+
+    const rawFields = await this.$db.table(this.$tableName).fields();
+    return this.$fields = rawFields.map(field => field['COLUMN_NAME']);
+  }
+
+  async inFields(field: string): Promise<boolean> {
+    const fields = await this.getFields();
+    return fields.indexOf(field) > -1
   }
 
   async getById(id: string | number): Promise<T> {
@@ -31,8 +46,13 @@ export default class BaseService<T> {
   async insert(data: T): Promise<any>;
   async insert(data: T[]): Promise<void>;
   async insert(data: T|T[]): Promise<any> {
+    const insertData = { ...data };
+
     const currTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
-    return await db.table(this.$tableName).insert({ ...data,  create_time: currTime, update_time: currTime });
+    await this.inFields('create_time') && (insertData['create_time'] = currTime);
+    await this.inFields('update_time') && (insertData['update_time'] = currTime);
+
+    return await db.table(this.$tableName).insert({ ...data, create_time: currTime, update_time: currTime });
   }
 
   async updateById(id: string|number, data: T) {
@@ -46,7 +66,7 @@ export default class BaseService<T> {
 
     if (exist) {
       const newData = { ...exist, ...data };
-      newData.update_time = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+      await this.inFields('update_time') && (newData['update_time'] = moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
 
       const id = newData[this.$primaryKey];
       await this.updateById(id, newData);
