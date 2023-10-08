@@ -8,6 +8,7 @@ import ScriptModel from '@/model/script.model';
 
 const logger = getLogger('ScriptWatcher');
 const SCRIPT_DIR = process.env.SERVER_SCRIPT_DIR || './scripts';
+const ScriptPollingInterval = parseInt(process.env.SERVER_SCRIPT_POLLING_INTERVAL) || 10 * 1000;
 
 export interface ScriptWatchEvent {
   type: 'add' | 'change'
@@ -75,6 +76,8 @@ export default class ScriptWatcher {
       ignoreInitial: false,
       // useFsEvents: true,
       usePolling: true,
+      interval: ScriptPollingInterval,
+      binaryInterval: ScriptPollingInterval,
       // alwaysStat: true,
       awaitWriteFinish : true,
       ignorePermissionErrors: true

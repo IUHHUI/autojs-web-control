@@ -48,7 +48,10 @@ ENV DB_HOST=localhost \
   VSCODE_EXT_PORT=9317 \
   WEB_PORT=9528 \
   WEB_BASE_API=http://47.108.180.116:9319 \
-  WEB_WS_HOST=ws://47.108.180.116:9319
+  WEB_WS_HOST=ws://47.108.180.116:9319 \
+  SERVER_SCRIPT_DIR=./scripts \
+  CHOKIDAR_USEPOLLING=1 \
+  SERVER_SCRIPT_POLLING_INTERVAL=10000
 RUN chmod +x ./docker-entrypoint.sh
 ENTRYPOINT [ "bash", "docker-entrypoint.sh" ]
 # ENTRYPOINT ["echo", "Hello user"]
