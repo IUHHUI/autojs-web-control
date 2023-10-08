@@ -44,9 +44,7 @@ export default class BaseService<T> {
 
     if (exist) {
       const newData = { ...exist, ...data };
-      if (newData.update_time) {
-        newData.update_time = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
-      }
+      newData.update_time = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
 
       const id = newData[this.$primaryKey];
       await this.updateById(id, newData);
