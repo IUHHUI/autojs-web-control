@@ -38,6 +38,8 @@
     "moment": "^2.24.0",
     "mysql": "^2.16.0",
     "reflect-metadata": "^0.1.12",
+    "soul-orm": "file:lib/soul-orm",
+    "souljs": "file:lib/souljs",
     "sqlstring": "^2.3.1",
     "swagger-ui-dist": "^3.20.5",
     "uuid": "^3.3.2",
