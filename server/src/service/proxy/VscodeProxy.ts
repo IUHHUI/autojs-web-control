@@ -22,7 +22,7 @@ export class VscodeProxy {
 
   public static getInstance() {
     if (!VscodeProxy.instance) {
-      logger.info('VscodeProxy Not initialized!');
+      logger.info('Not initialized!');
     }
     return VscodeProxy.instance;
   }
@@ -32,7 +32,7 @@ export class VscodeProxy {
     client.connect(this.targetUrl);
 
     client.on('connect', (connection: websocket.connection) => {
-      logger.info(`VscodeProxy connected to -> ${this.targetUrl}`);
+      logger.info(`connected to -> ${this.targetUrl}`);
       for (const id in clientConnectListeners) {
         const listener = clientConnectListeners[id];
         listener(connection);
@@ -40,7 +40,7 @@ export class VscodeProxy {
     });
 
     client.on('connectFailed', (err) => {
-      logger.error(`VscodeProxy connect failed!`, err);
+      logger.error(`connect failed!`, err);
     });
   }
 
@@ -74,14 +74,14 @@ export class VscodeProxy {
     }
 
     if (message.type === 'hello') {
-      logger.info(`VscodeProxy handshake finish: device -> ${deviceConnection.name} `);
+      logger.info(`handshake finish: device -> ${deviceConnection.name} `);
       this.removeClientConnectListener(deviceConnection.name); // 只执行一次建立连接的过程，建立完成后就删除监听器
     } else if (message.type === 'pong') {
-      logger.debug(`VscodeProxy on server pong device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`);
+      logger.debug(`on server pong device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`);
     } else {
       if (message.type === 'command') {
         if (message.data) {
-          logger.info(`VscodeProxy on server command device -> ${deviceConnection.name} -> ${message.data.command}`);
+          logger.info(`on server command device -> ${deviceConnection.name} -> ${message.data.command}`);
           if (message.data.command === 'save') {
             this.onSaveCommand(deviceConnection, message.data);
           }
@@ -91,7 +91,7 @@ export class VscodeProxy {
         }
       }
       deviceConnection.sendUTF(JSON.stringify(message));
-      // logger.info(`VscodeProxy on server message device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`, message.type);
+      // logger.info(`on server message device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`, message.type);
     }
   }
 
@@ -109,23 +109,23 @@ export class VscodeProxy {
     const id = count++;
 
     this.addClientConnectListener(deviceConnection.name, (connection) => {
-      logger.info(`VscodeProxy connected device -> ${deviceConnection.name} -> ${connection.socket.localPort} -> ${this.targetUrl} -> id${id}`);
+      logger.info(`connected device -> ${deviceConnection.name} -> ${connection.socket.localPort} -> ${this.targetUrl} -> id${id}`);
 
       deviceConnection.vscodeConnection = connection;
       deviceConnection.vscodeConnection.on('message', (message) => {
         this.onServerMessage(parseMessage(message), deviceConnection);
       });
       deviceConnection.vscodeConnection.on('close', (code, message) => {
-        logger.info(`VscodeProxy server connection close device -> ${deviceConnection.name} -> ${code} ${message}`);
+        logger.info(`server connection close device -> ${deviceConnection.name} -> ${code} ${message}`);
         deviceConnection.vscodeConnection = null;
       });
       deviceConnection.vscodeConnection.on('error', (err) => {
-        logger.error(`VscodeProxy server connection error device -> ${deviceConnection.name} -> ${err.message}`);
+        logger.error(`server connection error device -> ${deviceConnection.name} -> ${err.message}`);
         deviceConnection.vscodeConnection = null;
       });
       deviceConnection.vscodeConnection && deviceConnection.vscodeConnection.sendUTF(JSON.stringify(hello));
     });
-    // logger.info(`VscodeProxy try connect -> ${deviceConnection.name} -> ${this.targetUrl}`);
+    // logger.info(`try connect -> ${deviceConnection.name} -> ${this.targetUrl}`);
   }
 
   private static async proxySetup() {
@@ -138,7 +138,7 @@ export class VscodeProxy {
         return;
       }
 
-      logger.debug(`VscodeProxy on client message device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`);
+      logger.debug(`on client message device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`);
 
       if (message.type === 'hello') {
         this.connectToServerByDevice(deviceConnection, message);
@@ -157,7 +157,7 @@ export class VscodeProxy {
       if (client.type === 'device' && status === 'close') {
         client.vscodeConnection && client.vscodeConnection.close();
         this.removeClientConnectListener(client.name);
-        logger.info(`VscodeProxy close device -> ${client.name}`);
+        logger.info(`close device -> ${client.name}`);
         // WebSocketManager.getInstance().sendUtf(client, { type: 'hello', data: { server_version: 2 } });
       }
     });
@@ -165,7 +165,7 @@ export class VscodeProxy {
 
   public static init() {
     if (!VscodeproxyOn) {
-      logger.info('VscodeProxy Switch off!');
+      logger.info('Switch off!');
       return;
     }
 

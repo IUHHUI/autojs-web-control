@@ -57,7 +57,7 @@ export default class ScriptWatcher {
       script,
       script_args: event.args,
     };
-    logger.debug(`ScriptWatcher autoSave event -> ${event.type} -> ${name}`);
+    logger.debug(`autoSave event -> ${event.type} -> ${name}`);
 
     await ScriptModel.upsertBy('script_name', scriptData);
   }
@@ -68,7 +68,7 @@ export default class ScriptWatcher {
 
     if (!fs.existsSync(dirPath)) {
       // throw new Error(`ScriptWatcher script dir ${dir} not exists!`);
-      logger.info(`ScriptWatcher script dir '${dirPath}' not exists, create it!`);
+      logger.info(`script dir '${dirPath}' not exists, create it!`);
       fs.mkdirSync(dirPath, { recursive: true });
     }
 
@@ -84,19 +84,19 @@ export default class ScriptWatcher {
     });
 
     this.watcher.on('add', (p) => {
-      logger.debug(`ScriptWatcher add ${p}`);
+      logger.debug(`add ${p}`);
       scriptListeners.forEach((listener) => {
         listener(this.getWatchEvent(p, 'add'));
       });
     });
     this.watcher.on('change', (p) => {
-      logger.debug(`ScriptWatcher change ${p}`);
+      logger.debug(`change ${p}`);
       scriptListeners.forEach((listener) => {
         listener(this.getWatchEvent(p, 'change'));
       })
     })
 
-    logger.info(`ScriptWatcher start watch -> '${scriptsGlob}'`);
+    logger.info(`start watch -> '${scriptsGlob}'`);
   }
 
   public static init() {
