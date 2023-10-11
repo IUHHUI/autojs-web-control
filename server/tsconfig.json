@@ -5,14 +5,13 @@
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es6",
+    // "lib": [],
+    "target": "ES6",
     "sourceMap": false,
     "outDir": "./",
     "baseUrl": "./",
     "paths": {
-      "@/*":[
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
   "exclude": ["node_modules"],

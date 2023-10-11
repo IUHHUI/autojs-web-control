@@ -14,6 +14,7 @@ moduleAlias.addAlias('@', (fromPath, request, alias) => {
 })
 require('dotenv').config();
 import * as koaLogger from 'koa-logger';
+import * as log4js from 'log4js';
 import { createApplication } from '@/common/application';
 import { NODE_ENV } from '@/utils/enums';
 import getLogger from '@/utils/log4js';
@@ -22,6 +23,7 @@ import { WebSocketManager } from '@/service/WebSocketManager';
 import ScriptWatcher from '@/service/ScriptWatcher';
 import { DeviceManager } from '@/service/DeviceManager';
 import { AdminSocketManager } from '@/service/AdminSocketManager';
+import { LogcatManager } from '@/service/LogcatManager';
 import { SchedulerManager } from '@/service/SchedulerManager';
 import { VscodeProxy } from '@/service/proxy/VscodeProxy';
 import config from './config';
@@ -47,11 +49,15 @@ async function main() {
   DeviceManager.init();
   VscodeProxy.init();
   AdminSocketManager.init();
+  LogcatManager.init();
   await SchedulerManager.init();
 }
 
 process.on('rejectionHandled', logger.error.bind(logger));
 process.on('uncaughtException', logger.error.bind(logger));
 process.on('warning', logger.warn.bind(logger));
+process.on('exit', () => {
+  log4js.shutdown();
+})
 
 main();

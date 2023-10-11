@@ -1,0 +1,77 @@
+{
+  "appenders": {
+    "stdout": {
+      "type": "stdout",
+      "layout": {
+        "type": "logging",
+        "color": true
+      }
+    },
+    "access": {
+      "type": "dateFile",
+      "filename": "log/access.log",
+      "pattern": "yyyy-MM-dd",
+      "category": "http",
+      "layout": {
+        "type": "logging"
+      }
+    },
+    "app": {
+      "type": "file",
+      "filename": "log/app.log",
+      "maxLogSize": 10485760,
+      "numBackups": 3,
+      "layout": {
+        "type": "logging"
+      }
+    },
+    "errorFile": {
+      "type": "file",
+      "filename": "log/errors.log",
+      "layout": {
+        "type": "logging"
+      }
+    },
+    "errors": {
+      "type": "logLevelFilter",
+      "level": "ERROR",
+      "appender": "errorFile",
+      "layout": {
+        "type": "logging"
+      }
+    },
+    "scriptLog": {
+      "type": "dateFile",
+      "filename": "log/script-log.log",
+      "pattern": "yyyy-MM-dd",
+      "category": "script",
+      "layout": {
+        "type": "logging"
+      }
+    },
+    "scriptResult": {
+      "type": "dateFile",
+      "filename": "log/script-results.log",
+      "pattern": "yyyy-MM-dd",
+      "category": "result",
+      "layout": {
+        "type": "logging"
+      }
+    }
+  },
+  "categories": {
+    "default": {
+      "appenders": ["stdout", "app", "errors"],
+      "level": "INFO"
+    },
+    "app": { "appenders": ["stdout", "app"], "level": "INFO" },
+    "http": { "appenders": ["access"], "level": "DEBUG" },
+    "script": {
+      "appenders": ["scriptLog"],
+      "level": "INFO"
+    },
+    "result": { "appenders": ["scriptResult"], "level": "WARN" }
+  },
+  "pm2": true,
+  "pm2InstanceVar": "INSTANCE_ID"
+}

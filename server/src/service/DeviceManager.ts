@@ -22,18 +22,8 @@ export class DeviceManager {
     const { name, ip } = params;
     const deviceName = name || ip;
 
-    // let device = await DeviceModel.getByDeviceName(deviceName as string);
-    // // let device = await DeviceModel.getUnion(deviceName, ip);
-    // if (!device) {
-    //   await DeviceModel.insert({ name: deviceName, ip, create_time: moment().format('YYYY-MM-DD HH:mm:ss') });
-    // }
-
-    // // device = await DeviceModel.getByDeviceName(deviceName);
-    // await DeviceModel.updateById(device.device_id, { connect_time: moment().format('YYYY-MM-DD HH:mm:ss') });
-
     const device = await DeviceModel.upsertBy('name', { name: deviceName, ip, connect_time: moment().format('YYYY-MM-DD HH:mm:ss') });
     return device
-    //return await DeviceModel.upsertBy('name', { name: deviceName, ip, connect_time: moment().format('YYYY-MM-DD HH:mm:ss') });
   }
 
   private static async clientHelloListener(client: WebSocketExt, data) {
@@ -70,17 +60,6 @@ export class DeviceManager {
       if (params.token) {
         return { type: null };
       }
-      // const ip = (req.connection.remoteAddress || (req.headers['x-forwarded-for'] as any || '').split(/\s*,\s*/)[0]).replace(/[^0-9\.]/ig, '');
-
-      // const deviceName = params.name || ip;
-
-      // let device = await DeviceModel.getByDeviceName(deviceName as string);
-      // if (!device) {
-      //   await DeviceModel.insert({ name:deviceName, ip, create_time: moment().format('YYYY-MM-DD HH:mm:ss') });
-      // }
-
-      // device = await DeviceModel.getByDeviceName(deviceName);
-      // await DeviceModel.updateById(device.device_id, { connect_time: moment().format('YYYY-MM-DD HH:mm:ss') });
 
       return { type: 'device' };
     });
