@@ -7,21 +7,17 @@ ENV GIT_REPO=https://github.com/awamwang/autojs-web-control.git \
 FROM base as deps
 WORKDIR /app/${PROJECT_NAME}
 ADD ./server/package.json ./server/package-lock.json ./server/
+ADD ./server/lib/ ./server/lib/
 ADD ./web/package.json ./web/package-lock.json ./web/
 RUN npm set progress=false
 RUN cd /app/${PROJECT_NAME}/server && npm install --only=production --registry=https://registry.npmmirror.com \
   && cd /app/${PROJECT_NAME}/web && npm install --only=production --registry=https://registry.npmmirror.com \
   && npm install runjs chalk replace-in-file --registry=https://registry.npmmirror.com
-# ADD ./server/package.json ./server/package-lock.json ./server_deps/
-# ADD ./web/package.json ./web/package-lock.json ./web_deps/
-# RUN npm set progress=false
-# RUN cd /tmp/server_deps && npm install --only=production --registry=https://registry.npmmirror.com && cd /tmp/web_deps && npm install --only=production --registry=https://registry.npmmirror.com
 
 # files
 FROM deps as files
 WORKDIR /app/${PROJECT_NAME}
-COPY ./server/lib/soul-orm/ ./server/node_modules/soul-orm/
-COPY ./server/lib/souljs/ ./server/node_modules/souljs/
+COPY ./server/config/ ./server/config/
 COPY ./web/vue.config.js ./web/
 COPY ./web/src/settings.js ./web/src/
 COPY ./web//mock/mock-server.js ./web/mock/

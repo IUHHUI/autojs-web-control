@@ -17,8 +17,10 @@ services:
     env_file:
       - .env
     volumes:
+      - ./data/server/config:/app/autojs-web-control/server/config
       - ./data/server/log:/app/autojs-web-control/server/log
       - ./data/server/scripts:/app/autojs-web-control/server/scripts
+      - /etc/timezone:/etc/timezone
     ports:
       - 9319:9319 # Web UI
     restart: unless-stopped

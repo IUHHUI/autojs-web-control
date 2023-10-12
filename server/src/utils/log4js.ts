@@ -40,7 +40,7 @@ addLayout('logging', function(config) {
 });
 
 // const LoggerLevel = 'DEBUG'
-const LoggerLevel = process.env.SERVER_LOG_LEVEL || 'INFO';
+// const LoggerLevel = process.env.SERVER_LOG_LEVEL || 'INFO';
 
 // console.log(`LoggerLevel: ${LoggerLevel}`);
 // const config = {

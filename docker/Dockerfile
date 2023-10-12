@@ -6,10 +6,11 @@ ENV GIT_REPO=https://github.com/awamwang/autojs-web-control.git \
 FROM base as deps
 WORKDIR /tmp
 ADD ./server/package.json ./server/package-lock.json ./server_deps/
+ADD ./server/lib/ ./server_deps/lib/
 ADD ./web/package.json ./web/package-lock.json ./web_deps/
 RUN npm set progress=false
 RUN cd /tmp/server_deps && npm install --only=production --registry=https://registry.npmmirror.com && cd /tmp/web_deps && npm install --only=production --registry=https://registry.npmmirror.com
-RUN cp -R /tmp/server_deps prod_server_deps && cp -R /tmp/web_deps prod_web_deps
+# RUN cp -R /tmp/server_deps prod_server_deps && cp -R /tmp/web_deps prod_web_deps
 RUN cd /tmp/server_deps && npm install --registry=https://registry.npmmirror.com && cd /tmp/web_deps && npm install --registry=https://registry.npmmirror.com
 # RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
 
@@ -18,13 +19,11 @@ FROM deps as build
 COPY . /app/${PROJECT_NAME}/
 WORKDIR /app/${PROJECT_NAME}
 RUN cd ./server \
-  && cp -a /tmp/server_deps ./node_modules/ \
-  && cp ./lib/souljs ./node_modules -r \
-  && cp ./lib/soul-orm/ ./node_modules -r \
+  && cp -ar /tmp/server_deps/node_modules/ ./ \
   && npm run build
 RUN cd ./web \
-  && cp -a /tmp/web_deps ./node_modules/ \
-  && npm run build:prod
+  && cp -ar /tmp/web_deps/node_modules/ ./ \
+  && npm run build
 
 # app
 FROM build
