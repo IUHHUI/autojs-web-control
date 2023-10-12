@@ -1,7 +1,8 @@
 /**
  * @Author: kun
  */
-
+import * as path from 'path';
+import * as dayjs from 'dayjs'
 import { configure, getLogger, addLayout } from 'log4js';
 import chalk from 'chalk';
 
@@ -27,10 +28,7 @@ addLayout('logging', function(config) {
       data,
     } = logEvent;
     const timeObj = new Date(startTime);
-    const timeStr = `${timeObj
-      .toLocaleDateString()
-      .split('/')
-      .join('-')} ${timeObj.toLocaleTimeString()}`;
+    const timeStr = dayjs(timeObj).format('YYYY-MM-DD HH:mm:ss');
 
     const dataStr = data.map(d => jsonable(d) ? JSON.stringify(d) : d).join(' ')
     const logStr = `${timeStr} ${padEnd(p, 5)} [${categoryName}] ${dataStr}`;
@@ -41,44 +39,11 @@ addLayout('logging', function(config) {
 
 // const LoggerLevel = 'DEBUG'
 // const LoggerLevel = process.env.SERVER_LOG_LEVEL || 'INFO';
-
 // console.log(`LoggerLevel: ${LoggerLevel}`);
-// const config = {
-//   replaceConsole: true,
-//   appenders: {
-//     stdout: { type: 'stdout' },
-//     access: {
-//       type: 'dateFile',
-//       filename: 'log/access.log',
-//       pattern: '-yyyy-MM-dd',
-//       category: 'http',
-//     },
-//     app: {
-//       type: 'file',
-//       filename: 'log/app.log',
-//       maxLogSize: 10485760,
-//       numBackups: 3,
-//     },
-//     errorFile: {
-//       type: 'file',
-//       filename: 'log/errors.log',
-//     },
-//     errors: {
-//       type: 'logLevelFilter',
-//       level: 'ERROR',
-//       appender: 'errorFile',
-//     },
-//   },
-//   categories: {
-//     default: { appenders: ['stdout', 'app', 'errors'], level: LoggerLevel },
-//     http: { appenders: ['stdout', 'access'], level: LoggerLevel },
-//     app: { appenders: ['stdout', 'access'], level: LoggerLevel },
-//   },
-//   pm2: true, // https://log4js-node.github.io/log4js-node/clustering.html
-//   pm2InstanceVar: 'INSTANCE_ID',
-// };
 
-// configure(config);
-configure('config/log4js.json');
+const logConfigPath = path.resolve('config/log4js.json');
+console.log(`logConfigPath: ${logConfigPath}`);
+configure(logConfigPath);
+// configure('config/log4js.json');
 
 export default getLogger;
