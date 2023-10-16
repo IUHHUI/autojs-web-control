@@ -5,10 +5,12 @@ import unless = require('koa-unless');
 // import { redis } from '../utils/redis';
 import { ResultUtils } from '@/utils/result-utils';
 
-export const secret = 'hahahahahah' + moment().format('YYYYMMDD');
+export const secret = process.env.SERVER_SECRET || '&T1G*sd3' + moment().format('YYYYMMDD');
+const expiresIn = parseInt(process.env.SERVER_EXPIRES_HOUR || '6');
+
 
 export const sign = (data: any): string => {
-  const token = jwt.sign(data, secret, { expiresIn: '6h' });
+  const token = jwt.sign(data, secret, { expiresIn: expiresIn + 'h' });
   return token;
 };
 

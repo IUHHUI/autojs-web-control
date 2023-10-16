@@ -30,7 +30,9 @@ export class Script {
   })
   async run2(@Body() body: any) {
     const script = await ScriptModel.getById(body.script_id);
-    ScriptExecutor.getInstance().run(body.devices.join(','), script.script_name, script.script);
+    if (script) {
+      ScriptExecutor.getInstance().run(body.devices.join(','), script.script_name, script.script);
+    }
     return ResultUtils.success();
   }
 
