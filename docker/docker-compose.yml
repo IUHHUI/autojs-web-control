@@ -37,4 +37,4 @@ services:
       - 9528:9528 # Web UI
     restart: unless-stopped
 
-# docker-compose --project-name "autojs-web-control" -f ./docker/docker-compose.yml --project-directory ./ up -d --force-recreate
+# docker-compose --project-name "autojs-web-control" -f ./docker-compose.yml --project-directory ./ up -d --force-recreate

@@ -13,6 +13,7 @@ nodejs typescript vuejs  [SoulJs](https://github.com/zrk1993/souljs) [AutoJs](ht
 5. 支持代理到VS code插件（2023.09.25）
 6. 自动同步scripts目录到数据库，方便开发调试（2023.10.08）
 7. scirpt执行log写文件（2023.10.11）
+8. server配置文件（说明 [config](https://github.com/node-config/node-config/wiki/Configuration-Files)）
 
 ## USE
 

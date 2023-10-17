@@ -6,6 +6,8 @@ import * as dayjs from 'dayjs'
 import { configure, getLogger, addLayout } from 'log4js';
 import chalk from 'chalk';
 
+const logger = getLogger('logger');
+
 function padEnd(str: string, len: number) {
   if (str.length < len) {
     return str + new Array(len - str.length + 1).join(' ');
@@ -42,8 +44,8 @@ addLayout('logging', function(config) {
 // console.log(`LoggerLevel: ${LoggerLevel}`);
 
 const logConfigPath = path.resolve('config/log4js.json');
-console.log(`logConfigPath: ${logConfigPath}`);
 configure(logConfigPath);
+logger.info(`Config file path -> ${logConfigPath}`);
 // configure('config/log4js.json');
 
 export default getLogger;

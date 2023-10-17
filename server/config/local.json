@@ -1,0 +1,6 @@
+{
+  "websocketServer": {
+    "keepalive": true,
+    "keepaliveInterval": 10000
+  }
+}
