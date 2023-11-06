@@ -52,7 +52,7 @@ export default class BaseService<T> {
     await this.inFields('create_time') && (insertData['create_time'] = currTime);
     await this.inFields('update_time') && (insertData['update_time'] = currTime);
 
-    return await db.table(this.$tableName).insert({ ...data, create_time: currTime, update_time: currTime });
+    return await db.table(this.$tableName).insert(insertData);
   }
 
   async updateById(id: string|number, data: T) {

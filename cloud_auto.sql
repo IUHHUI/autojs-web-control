@@ -62,6 +62,8 @@ CREATE TABLE `t_scheduler` (
   `script_id` int(11) NOT NULL COMMENT '执行的任务',
   `device_ids` varchar(1024) DEFAULT NULL COMMENT '执行的设备 可以多个',
   `active` tinyint(1) DEFAULT '0',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`scheduler_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
 

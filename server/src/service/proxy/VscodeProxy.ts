@@ -109,18 +109,18 @@ export class VscodeProxy {
     const id = count++;
 
     this.addClientConnectListener(deviceConnection.name, (connection) => {
-      logger.info(`connected device -> ${deviceConnection.name} -> ${connection.socket.localPort} -> ${this.targetUrl} -> id${id}`);
+      logger.info(`connected, device -> ${deviceConnection.name} -> ${connection.socket.localPort} -> ${this.targetUrl} -> id${id}`);
 
       deviceConnection.vscodeConnection = connection;
       deviceConnection.vscodeConnection.on('message', (message) => {
         this.onServerMessage(parseMessage(message), deviceConnection);
       });
       deviceConnection.vscodeConnection.on('close', (code, message) => {
-        logger.info(`server connection close device -> ${deviceConnection.name} -> ${code} ${message}`);
+        logger.info(`server connection close, device -> ${deviceConnection.name} -> ${code} ${message}`);
         deviceConnection.vscodeConnection = null;
       });
       deviceConnection.vscodeConnection.on('error', (err) => {
-        logger.error(`server connection error device -> ${deviceConnection.name} -> ${err.message}`);
+        logger.error(`server connection error, device -> ${deviceConnection.name} -> ${err.message}`);
         deviceConnection.vscodeConnection = null;
       });
       deviceConnection.vscodeConnection && deviceConnection.vscodeConnection.sendUTF(JSON.stringify(hello));
@@ -138,7 +138,7 @@ export class VscodeProxy {
         return;
       }
 
-      logger.debug(`on client message device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`);
+      logger.debug(`on client message, device -> ${deviceConnection.name} -> ${JSON.stringify(message)}`);
 
       if (message.type === 'hello') {
         this.connectToServerByDevice(deviceConnection, message);
@@ -157,7 +157,7 @@ export class VscodeProxy {
       if (client.type === 'device' && status === 'close') {
         client.vscodeConnection && client.vscodeConnection.close();
         this.removeClientConnectListener(client.name);
-        logger.info(`close device -> ${client.name}`);
+        logger.info(`close, device -> ${client.name}`);
         // WebSocketManager.getInstance().sendUtf(client, { type: 'hello', data: { server_version: 2 } });
       }
     });
