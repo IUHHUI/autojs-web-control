@@ -50,7 +50,7 @@
           <el-select v-model="form.device_ids" size="mini" placeholder="选择设备" style="width: 100%;">
             <el-option label="全部设备" value="0" />
             <el-option
-              v-for="item in $store.state.device.list.filter(i => i.is_online)"
+              v-for="item in $store.state.device.list.filter(i => i)"
               :key="item.device_id"
               :label="item.name"
               :value="item.device_id"
