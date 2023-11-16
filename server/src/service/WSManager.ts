@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import * as http from 'http';
+import * as net from 'net';
 import * as WebSocket from 'ws';
 import getLogger from '@/utils/log4js';
 import { Buffer } from 'buffer';
@@ -65,7 +66,7 @@ export class WebSocketManager extends EventEmitter {
     this.httpServer.on('upgrade', (request, socket, head) => {
       this.authenticate(request, (authenticateInfo) => {
         if (authenticateInfo.type) {
-          this.wss.handleUpgrade(request, socket, head, (ws: any) => {
+          this.wss.handleUpgrade(request, socket as net.Socket, head, (ws: any) => {
             ws.type = authenticateInfo.type;
             ws.extData = authenticateInfo.extData;
             this.wss.emit('connection', ws, request);

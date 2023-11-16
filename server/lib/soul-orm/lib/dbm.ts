@@ -18,7 +18,7 @@ export class DBM {
     pool.on('error', error => {
       this.logger.error('soul-dbm: ', error.message);
     });
-    
+
     pool.query('SELECT 1', error => {
       if (error) {
         this.logger.error('soul-dbm: ', error.message);
@@ -85,7 +85,7 @@ export class DBM {
   async beginTx() {
     const conn = await this.getPoolConnection();
 
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
       conn.beginTransaction((err: Error) => {
         if (err) {
           reject(err);

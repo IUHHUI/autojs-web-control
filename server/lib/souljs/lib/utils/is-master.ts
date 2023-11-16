@@ -5,5 +5,5 @@ export function isPM2Master(): boolean {
 }
 
 export default function isMaster(): boolean {
-  return cluster.isMaster || isPM2Master();
+  return cluster["isMaster"] || isPM2Master();
 }

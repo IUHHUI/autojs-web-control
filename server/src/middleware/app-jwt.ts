@@ -25,7 +25,7 @@ const JWTTokenError = {
 
 export const verify = (ctx: Koa.Context): Promise<string | any> => {
   const token = ctx.query.token || ctx.header.authorization || ctx.cookies.get('authorization');
-  return verifyToken(token);
+  return verifyToken(token as string);
 };
 
 export async function verifyToken(token: string) {

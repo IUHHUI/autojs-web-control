@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@koa/cors": "^2.2.3",
-    "@types/ws": "^6.0.3",
     "assign-deep": "^1.0.0",
+    "chalk": "2.4.2",
     "chokidar": "^3.5.3",
     "config": "^3.3.9",
     "cron": "^1.6.0",
@@ -64,11 +64,12 @@
     "@types/koa-static": "^4.0.0",
     "@types/log4js": "^2.3.5",
     "@types/mysql": "^2.15.5",
-    "@types/node": "^10.12.21",
+    "@types/node": "^16.18.61",
     "@types/sqlstring": "^2.2.1",
     "@types/swagger-ui-dist": "^3.0.0",
     "@types/uuid": "^3.4.4",
     "@types/websocket": "^1.0.6",
+    "@types/ws": "^6.0.4",
     "koa-bodyparser": "^4.2.1",
     "nodemon": "^3.0.1",
     "prettier": "^1.16.3",
@@ -76,6 +77,6 @@
     "ts-node": "^7.0.1",
     "tsconfig-paths": "^3.14.2",
     "tslint": "5.12.1",
-    "typescript": "^3.3.1"
+    "typescript": "^4.9.5"
   }
 }
