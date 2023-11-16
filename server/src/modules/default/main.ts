@@ -12,7 +12,7 @@ moduleAlias.addAlias('@', (fromPath, request, alias) => {
 
   return __dirname + '../../../'
 })
-require('dotenv').config();
+import 'dotenv/config';
 import * as koaLogger from 'koa-logger';
 import * as log4js from 'log4js';
 import { createApplication } from '@/common/application';

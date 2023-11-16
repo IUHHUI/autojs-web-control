@@ -17,3 +17,4 @@ server/utils/db.ts
 /web/.env.production
 /.vscode
 /sync.ffs_db
+/autojs-web-control.code-workspace
