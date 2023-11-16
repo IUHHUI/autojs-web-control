@@ -18,3 +18,4 @@ server/utils/db.ts
 /.vscode
 /sync.ffs_db
 /autojs-web-control.code-workspace
+/node_modules

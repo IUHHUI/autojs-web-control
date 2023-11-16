@@ -1,0 +1,15 @@
+{
+  "name": "autojs-web-control",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:docker": "pnpm -r build && docker build -t wangnew2013/autojs-web-control -f docker/Dockerfile-prod .",
+    "start:docker": "cd docker && docker-compose --project-name \"autojs-web-control\" -f ./docker-compose.ali.yml --project-directory ./ up -d --force-recreate",
+    "restart:docker": "npm run build:docker && npm run start:docker"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
