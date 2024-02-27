@@ -1,0 +1,50 @@
+version: "3"
+
+# x-common: &common
+#   image: autojs-web-control:latest
+#   build:
+#     context: .
+#     dockerfile: ./Dockerfile
+#   restart: always
+
+# name: autojs-web-control # Added in version 3.4 file format.
+services:
+  awc-server:
+    image: wangnew2013/autojs-web-control
+    # image: autojs-web-control
+    container_name: autojs-web-control-server
+    command: ["--server"]
+    env_file:
+      - .env-ali
+    environment:
+      - HOST=0.0.0.0
+      - DB_HOST=mysql5
+    volumes:
+      - ./data/server/config:/app/autojs-web-control/server/config
+      - ./data/server/log:/app/autojs-web-control/server/log
+      - ./data/server/scripts:/app/autojs-web-control/server/scripts
+    ports:
+      - 9319:9319 # Web UI
+    restart: unless-stopped
+    # network_mode: bridge
+    networks:
+      - net_db
+    external_links:
+      - mysql5:mysql5
+  awc-web:
+    image: wangnew2013/autojs-web-control
+    # image: autojs-web-control
+    container_name: autojs-web-control-web
+    command: ["--web"]
+    env_file:
+      - .env-ali
+    # volumes:
+    #   - /data/web/log:/web/log
+    ports:
+      - 9528:9528 # Web UI
+    restart: unless-stopped
+
+networks:
+  net_db:
+    external: true
+# docker-compose --project-name "autojs-web-control" -f ./docker-compose.ali.yml --project-directory ./ up -d --force-recreate
