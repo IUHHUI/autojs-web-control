@@ -1,19 +1,20 @@
-import * as jwt from 'jsonwebtoken';
-import * as Koa from 'koa';
-import * as moment from 'moment';
-import unless = require('koa-unless');
+import * as jwt from 'jsonwebtoken'
+import * as Koa from 'koa'
+import unless = require('koa-unless')
+import * as moment from 'moment'
+
+import getLogger from '@/utils/log4js'
 // import { redis } from '../utils/redis';
-import { ResultUtils } from '@/utils/result-utils';
-import getLogger from '@/utils/log4js';
+import { ResultUtils } from '@/utils/result-utils'
 
 const logger = getLogger('middleware');
 
 export const secret = process.env.SERVER_SECRET || '&T1G*sd3' + moment().format('YYYYMMDD');
-const expiresIn = parseInt(process.env.SERVER_EXPIRES_HOUR || '6');
-logger.info(`jwt secret -> ${secret.slice(0, 3) + '***' + secret.slice(-3)}, expiresIn -> ${expiresIn}h`);
+const expiresIn = parseInt(process.env.SERVER_EXPIRES_HOUR || '6') + 'h';
+logger.info(`jwt secret -> ${secret.slice(0, 3) + '***' + secret.slice(-3)}, expiresIn -> ${expiresIn}`);
 
 export const sign = (data: any): string => {
-  const token = jwt.sign(data, secret, { expiresIn: expiresIn + 'h' });
+  const token = jwt.sign(data, secret, { expiresIn });
   return token;
 };
 

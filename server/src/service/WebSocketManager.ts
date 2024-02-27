@@ -37,8 +37,8 @@ const messageAnswer = new Map<object, any>();
 
 export const bufferFromString = Buffer.from
   ? Buffer.from
-  : function oldBufferFromString(string, encoding) {
-      return new Buffer(string, encoding);
+  : function oldBufferFromString(str: string, encoding: BufferEncoding) {
+      return new Buffer(str, encoding);
     };
 
 export class WebSocketManager extends EventEmitter {
@@ -47,7 +47,7 @@ export class WebSocketManager extends EventEmitter {
   private httpServer: http.Server;
   private wss: websocket.server;
   public wsClient: websocket.client;
-  private pingTimeout: NodeJS.Timeout;
+  private pingTimeout?: NodeJS.Timeout;
 
   public static init(server: http.Server) {
     if (!WebSocketManager.instance) {
@@ -109,11 +109,11 @@ export class WebSocketManager extends EventEmitter {
   private ping() {
     if (!this.pingTimeout) {
       this.pingTimeout = setInterval(() => {
-        this.wss.connections.forEach((ws: WebSocketExt) => {
-          if (ws.isAlive === false) {
+        this.wss.connections.forEach((ws: websocket.connection) => {
+          if ((ws as WebSocketExt).isAlive === false) {
             return ws.drop();
           }
-          ws.isAlive = false;
+          (ws as WebSocketExt).isAlive = false;
           ws.ping(() => {});
         });
       }, 3000);
@@ -139,14 +139,14 @@ export class WebSocketManager extends EventEmitter {
     logger.info('WebSocket.Server connection client ip -> ' + client.ip + ' url -> ' + req.url);
 
     client.addListener('close', (code: number, message: string) => {
-      logger.info('WebSocket.Client close ip -> ' + client.ip + ' code -> ' + code + ' message-> ' + message);
+      logger.info('client close, ip -> ' + client.ip + ' code -> ' + code + ' message-> ' + message);
       clientStatusChangeListeners.forEach((listener) => {
         listener(client, 'close');
       });
     });
 
     client.addListener('error', (err: Error) => {
-      logger.info('WebSocket.Client error ip -> ' + client.ip + ' message-> ' + err.message);
+      logger.info('client error, ip -> ' + client.ip + ' message-> ' + err.message);
       clientStatusChangeListeners.forEach((listener) => {
         listener(client, 'error');
       });
@@ -181,7 +181,7 @@ export class WebSocketManager extends EventEmitter {
       client.isAlive = true;
     });
 
-    logger.info('WebSocket.Client open ip -> ' + client.ip);
+    logger.info('client open, ip -> ' + client.ip);
   }
 
   public addDeviceLogListener(listener: IDeviceLogListener) {
@@ -204,10 +204,10 @@ export class WebSocketManager extends EventEmitter {
     if (client.state === 'open') {
       message.message_id = `${Date.now()}_${Math.random()}`;
       logger.debug(`send message -> ${JSON.stringify(message)}`);
-      client.send(JSON.stringify(message), (err: Error) => {
+      client.send(JSON.stringify(message), (err?: Error) => {
         if (err) {
           logger.error(`send message appear error, message -> ${err.message}`);
-          cb(err);
+          cb && cb(err);
         } else {
           messageAnswer.set(message.message_id, cb);
         }
@@ -215,7 +215,7 @@ export class WebSocketManager extends EventEmitter {
     }
   }
 
-  public sendUtf(client: websocket.connection, message: any, cb?: (err: Error, data?: any) => {}) {
+  public sendUtf(client: websocket.connection, message: any, cb?: (err?: Error, data?: any) => {}) {
     if (client.state === 'open') {
       message.message_id = `${Date.now()}_${Math.random()}`;
       logger.debug(`send utf message -> ${JSON.stringify(message)}`);
