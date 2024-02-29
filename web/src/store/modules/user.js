@@ -1,6 +1,14 @@
-import { login, logout, getInfo } from '@/api/user';
-import { getToken, setToken, removeToken } from '@/utils/auth';
-import { resetRouter } from '@/router';
+import {
+  getInfo,
+  login,
+  logout,
+} from "@/api/user";
+import { resetRouter } from "@/router";
+import {
+  getToken,
+  removeToken,
+  setToken,
+} from "@/utils/auth";
 
 const state = {
   token: getToken(),
@@ -37,9 +45,9 @@ const actions = {
   },
 
   // get user info
-  getInfo({ commit, state }) {
+  getInfo({ commit, state }, token) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getInfo(state.token || token).then(response => {
         const { data } = response;
 
         if (!data) {

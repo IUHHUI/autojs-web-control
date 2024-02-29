@@ -1,7 +1,9 @@
-import * as Koa from 'koa';
-import * as session from 'koa-session';
+import * as Koa from 'koa'
+import * as session from 'koa-session'
 
-import { redis } from '@/utils/redis';
+import { redis } from '@/utils/redis'
+
+const expiresHour = parseInt(process.env.SERVER_EXPIRES_HOUR || '6')
 
 const store: session.stores = {
   /**
@@ -32,7 +34,7 @@ const CONFIG = {
   /** (number || 'session') maxAge in ms (default is 1 days) */
   /** 'session' will result in a cookie that expires when session/browser is closed */
   /** Warning: If a session cookie is stolen, this cookie will never expire */
-  maxAge: 1000 * 60 * 60 * 2,
+  maxAge: 1000 * 60 * 60 * expiresHour,
   autoCommit: true /** (boolean) automatically commit headers (default true) */,
   overwrite: true /** (boolean) can overwrite or not (default true) */,
   httpOnly: true /** (boolean) httpOnly or not (default true) */,
