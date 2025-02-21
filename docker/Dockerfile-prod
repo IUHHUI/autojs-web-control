@@ -1,21 +1,24 @@
 # 纯生产版本，一定先构建好
-FROM node:14 as base
-ENV GIT_REPO=https://github.com/awamwang/autojs-web-control.git \
-  PROJECT_NAME=autojs-web-control
+FROM node:14 AS base
+
+LABEL maintainer="dev" \
+  description="autojs-web-control prod 运行镜像"
+
+ENV PROJECT_NAME=autojs-web-control
 
 # install deps
-FROM base as deps
+FROM base AS deps
 WORKDIR /app/${PROJECT_NAME}
-ADD ./server/package.json ./server/package-lock.json ./server/
+ADD ./server/package.json ./server/
 ADD ./server/lib/ ./server/lib/
-ADD ./web/package.json ./web/package-lock.json ./web/
+ADD ./web/package.json ./web/
 RUN npm set progress=false
 RUN cd /app/${PROJECT_NAME}/server && npm install --only=production --registry=https://registry.npmmirror.com \
   && cd /app/${PROJECT_NAME}/web && npm install --only=production --registry=https://registry.npmmirror.com \
   && npm install runjs chalk replace-in-file --registry=https://registry.npmmirror.com
 
 # files
-FROM deps as files
+FROM deps AS files
 WORKDIR /app/${PROJECT_NAME}
 COPY ./server/config/ ./server/config/
 COPY ./web/vue.config.js ./web/
@@ -24,10 +27,10 @@ COPY ./web//mock/mock-server.js ./web/mock/
 COPY docker/docker-entrypoint.sh .
 
 # build
-FROM files as build
-COPY ./server/dist/ ./server/dist/
-COPY ./web/build/ ./web/build
-COPY ./web/dist/ ./web/dist/
+FROM files AS build
+COPY --from=awc-build /app/${PROJECT_NAME}/server/dist/ ./server/dist/
+COPY --from=awc-build /app/${PROJECT_NAME}/web/build/ ./web/build
+COPY --from=awc-build /app/${PROJECT_NAME}/web/dist/ ./web/dist/
 
 # app
 FROM build
@@ -53,7 +56,6 @@ ENV DB_HOST=localhost \
   SERVER_SCRIPT_POLLING_INTERVAL=10000
 RUN chmod +x ./docker-entrypoint.sh
 ENTRYPOINT [ "bash", "docker-entrypoint.sh" ]
-# ENTRYPOINT ["echo", "Hello user"]
 EXPOSE 9319
 EXPOSE 9528
 CMD [ "--server", "--web" ]

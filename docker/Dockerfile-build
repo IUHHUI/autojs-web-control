@@ -1,0 +1,18 @@
+#编译项目server and web
+FROM awc-deps-build AS build
+# 添加镜像的元数据
+LABEL maintainer="dev" \
+  description="autojs-web-control 构建"
+
+ENV PROJECT_NAME=autojs-web-control
+
+COPY . /app/${PROJECT_NAME}/
+WORKDIR /app/${PROJECT_NAME}
+
+RUN cd ./server \
+  && cp -ar /tmp/server_deps/node_modules/ ./ \
+  && npm run build
+
+RUN cd ./web \
+  && cp -ar /tmp/web_deps/node_modules/ ./ \
+  && npm run build

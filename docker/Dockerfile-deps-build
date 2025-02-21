@@ -1,0 +1,14 @@
+#安装依赖,包括开发依赖和生产依赖
+FROM node:14 AS base
+
+LABEL maintainer="dev" \
+  description="autojs-web-control 构建依赖"
+
+WORKDIR /tmp
+COPY ./server/package.json ./server_deps/
+COPY ./server/lib/ ./server_deps/lib/
+COPY ./web/package.json ./web_deps/
+
+RUN npm set progress=false
+RUN cd /tmp/server_deps && npm install --registry=https://registry.npmmirror.com 
+RUN cd /tmp/web_deps && npm install --registry=https://registry.npmmirror.com

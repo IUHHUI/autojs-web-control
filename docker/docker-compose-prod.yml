@@ -1,16 +1,14 @@
-version: "3"
-
 # x-common: &common
-#   image: awc-run:latest
+#   image: autojs-web-control:latest
 #   build:
 #     context: .
-#     dockerfile: ./Dockerfile
+#     dockerfile: ./Dockerfile-prod
 #   restart: always
 
 # name: autojs-web-control # Added in version 3.4 file format.
 services:
   awc-server:
-    image: awc-run
+    image: autojs-web-control
     container_name: autojs-web-control-server
     command: ["--server"]
     env_file:
@@ -21,7 +19,7 @@ services:
       - 9319:9319 # Web UI
     restart: unless-stopped
   awc-web:
-    image: awc-run
+    image: autojs-web-control
     container_name: autojs-web-control-web
     command: ["--web"]
     env_file:
@@ -32,4 +30,4 @@ services:
       - 9528:9528 # Web UI
     restart: unless-stopped
 
-# docker-compose --project-name "awc-run" -f ./docker-compose.yml --project-directory ./ up -d --force-recreate
+# docker-compose --project-name "autojs-web-control" -f ./docker-compose.yml --project-directory ./ up -d --force-recreate
