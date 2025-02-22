@@ -11,7 +11,7 @@ awc_run_network
 
 启动数据库
 ```
-docker run --detach --name auto_web_controller_test \
+docker run --detach --name awc-db \
 --restart=unless-stopped \
 --network awc_run_network \
 --ip 172.28.0.10 \
@@ -23,21 +23,22 @@ mariadb:latest
 初始化数据库
 ```
 #复制sql文件到容器
-docker cp cloud_auto.sql auto_web_controller_test:/tmp
-docker cp update.sql auto_web_controller_test:/tmp
+docker cp cloud_auto.sql awc-db:/tmp
+docker cp update.sql awc-db:/tmp
 
 #进入容器
-docker exec -it auto_web_controller_test bash
+docker exec -it awc-db bash
 
 #进入数据库cloud_auto
-mariadb -uroot -p cloud_auto
-
-> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'my-secret-pw' WITH GRANT OPTION; 
+mariadb -uroot -p'my-secret-pw'  cloud_auto \
+-e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'my-secret-pw' WITH GRANT OPTION;"
 
 #执行sql文件,初始化数据库
-> source /tmp/cloud_auto.sql;
-> source /tmp/update.sql;
+mariadb -uroot -p'my-secret-pw'  cloud_auto \
+-e "source /tmp/cloud_auto.sql;"
 
+mariadb -uroot -p'my-secret-pw'  cloud_auto \
+-e "source /tmp/update.sql;"
 ```
 
 ## docker 创建autojs-web-control镜像
