@@ -11,7 +11,6 @@ ENV DB_HOST=localhost \
   DB_PASSWORD=my-secret-pw \
   DB_NAME=cloud_auto \
   DB_DEBUG=true \
-  SERVER_LOG_LEVEL=DEBUG \
   SERVER_SECRET=xxx&T1G*sd3 \
   SERVER_EXPIRES_HOUR=6 \
   SERVER_SCRIPT_DIR=./scripts \

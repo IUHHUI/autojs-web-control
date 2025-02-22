@@ -39,13 +39,8 @@ addLayout('logging', function(config) {
   };
 });
 
-// const LoggerLevel = 'DEBUG'
-// const LoggerLevel = process.env.SERVER_LOG_LEVEL || 'INFO';
-// console.log(`LoggerLevel: ${LoggerLevel}`);
-
 const logConfigPath = path.resolve('config/log4js.json');
 configure(logConfigPath);
 logger.info(`Config file path -> ${logConfigPath}`);
-// configure('config/log4js.json');
 
 export default getLogger;

@@ -41,7 +41,6 @@ ENV DB_HOST=localhost \
   DB_PASSWORD=123321 \
   DB_NAME=cloud_auto \
   DB_DEBUG=false \
-  SERVER_LOG_LEVEL=DEBUG \
   VSCODE_EXT_PROXY_ON=false \
   VSCODE_EXT_IP=localhost \
   VSCODE_EXT_PORT=9317 \
