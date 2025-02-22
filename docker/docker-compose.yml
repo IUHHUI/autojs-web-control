@@ -1,5 +1,3 @@
-version: "3"
-
 # x-common: &common
 #   image: awc-run:latest
 #   build:
@@ -12,6 +10,8 @@ services:
   awc-server:
     image: awc-run
     container_name: autojs-web-control-server
+    networks:
+      - awc_run_network 
     command: ["--server"]
     env_file:
       - .env
@@ -23,6 +23,8 @@ services:
   awc-web:
     image: awc-run
     container_name: autojs-web-control-web
+    networks:
+      - awc_run_network 
     command: ["--web"]
     env_file:
       - .env
@@ -31,5 +33,9 @@ services:
     ports:
       - 9528:9528 # Web UI
     restart: unless-stopped
+
+networks:
+  awc_run_network:
+    external: true
 
 # docker-compose --project-name "awc-run" -f ./docker-compose.yml --project-directory ./ up -d --force-recreate

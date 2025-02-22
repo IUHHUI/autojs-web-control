@@ -1,9 +1,20 @@
+## 创建docker network
+```
+docker network create \
+--driver=bridge \
+--subnet=172.28.0.0/16 \
+--gateway=172.28.0.1 \
+awc_run_network
+```
+
 ## docker 启动数据库
 
 启动数据库
 ```
 docker run --detach --name auto_web_controller_test \
---publish 3306:3306 \
+--restart=unless-stopped \
+--network awc_run_network \
+--ip 172.28.0.10 \
 --env MARIADB_DATABASE=cloud_auto \
 --env MARIADB_ROOT_PASSWORD=my-secret-pw  \
 mariadb:latest
