@@ -1,8 +1,10 @@
 ## AutoJs Web Control
 
-fork from [autojs-web-control](https://github.com/zrk1993/autojs-web-control)
+fork from [awamwang/autojs-web-control](https://github.com/awamwang/autojs-web-control)
 
-nodejs typescript vuejs  [SoulJs](https://github.com/zrk1993/souljs) [AutoJs](https://github.com/hyb1996/Auto.js)
+awamwang/autojs-web-control fork from [autojs-web-control](https://github.com/zrk1993/autojs-web-control)
+
+nodejs typescript vuejs  [Souljs](https://github.com/zrk1993/souljs) [Autojs](https://github.com/hyb1996/Auto.js) [Autoxjs](https://github.com/aiselp/AutoX)
 
 ### 特性
 
@@ -19,26 +21,25 @@ nodejs typescript vuejs  [SoulJs](https://github.com/zrk1993/souljs) [AutoJs](ht
 
 ### 1. 下载Autojs
 
+手机设备安装Autojs apk or Autoxjs
+
 ### 2. 部署服务
 
 #### Docker(recommend)
 
 + build Dockerfile(or use wangnew2013/autojs-web-control)
-```
-docker build -t autojs-web-control -f docker/Dockerfile .
-```
+    * [构建镜像文档](./BUILD.md)
 
 + copy `docker/.example.env` -> `docker/.env` (or use other way define env in docker)
 
 + run with
-```
-cd docker
-docker-compose --project-name "autojs-web-control" up -d --force-recreate
-```
+    ```
+    cd docker
+    docker-compose --project-name "autojs-web-control" up -d --force-recreate
+    ```
 
 + 修改前端环境变量需要用vue-cli的方式
-
-复制`web/.env.production.example` -> `web/.env.production`，重新打包
+    * 复制`web/.env.production.example` -> `web/.env.production`，重新打包
 
 #### 源码
 
@@ -48,14 +49,21 @@ docker-compose --project-name "autojs-web-control" up -d --force-recreate
 
 ### 3. 设备连接服务端
 
-使用Autojs连接电脑功能 47.113.101.40:9319
+使用Autojs连接电脑功能 电脑ip:9319
+例如: 使用MUMU模拟器时 10.0.2.2:9319
+
+### 4. 使用Autoxjs注意事项
+
+如果手机使用Autoxjs, autojs-web-control web运行的脚本要先改名,并且带'.js'. 不然会执行失败.
+
+例如 test.js 在web端它显示的名字为"test.js.js"
 
 ## image
 
-![screen-develop](https://raw.githubusercontent.com/zrk1993/autojs-web-control/master/image/develop.png)
-![screen-device](https://raw.githubusercontent.com/zrk1993/autojs-web-control/master/image/device.png)
-![screen-scheduler](https://raw.githubusercontent.com/zrk1993/autojs-web-control/master/image/scheduler.png)
-![screen-workspaces](https://raw.githubusercontent.com/zrk1993/autojs-web-control/master/image/workspaces.png)
+![screen-develop](./image/develop.png)
+![screen-device](./image/device.png)
+![screen-scheduler](./image/scheduler.png)
+![screen-workspaces](./image/workspaces.png)
 
 ## License
 
